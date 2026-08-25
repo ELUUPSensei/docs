@@ -1,0 +1,83 @@
+---
+title: "Supported Chains Reference"
+sidebarTitle: "Chains Reference"
+description: "Reference table of blockchains supported by ELUUP AI, including chain IDs, public RPCs, block explorers, native tokens, and DEX integrations."
+---
+
+ELUUP AI operates on multiple EVM and non-EVM chains. Use this reference to map chain IDs to networks, find public RPC endpoints, and identify the DEXs where agents execute trades.
+
+## Chains Table
+
+| Chain | Chain ID | Status | Public RPC | Block Explorer | Native Token | DEX Integrations |
+| --- | --- | --- | --- | --- | --- | --- |
+| Base | 8453 | Live | `https://base.publicnode.com` | [basescan.org](https://basescan.org) | ETH | Uniswap v3, Aerodrome |
+| BNB Chain | 56 | Coming Soon | `https://bsc-dataseed.binance.org` | [bscscan.com](https://bscscan.com) | BNB | PancakeSwap |
+| Solana | N/A | Coming Soon | `https://mainnet.helius-rpc.com` | [solscan.io](https://solscan.io) | SOL | Jupiter, Raydium |
+
+## Chain Notes
+
+### Base
+
+Base is an Ethereum Layer 2 built on the OP Stack. It is the primary trading environment for ELUUP AI agents today. Token contracts use standard EVM addresses. Connect wallets and agents with chain ID `8453`.
+
+### BNB Chain
+
+BNB Chain support is scheduled for an upcoming release. Token contracts use EVM addresses (same format as Base and Ethereum). PancakeSwap will be the primary DEX integration.
+
+### Solana
+
+Solana is a non-EVM chain, so addresses and identifiers differ from the other supported networks.
+
+<Warning>
+  On Solana, token identifiers are **mint addresses**, not EVM-style contract addresses. Wallet and token addresses are base58-encoded strings that look different from Ethereum hex addresses. Ensure your integration handles base58 when Solana goes live.
+</Warning>
+
+## How to Use Chain IDs in API Calls
+
+Most ELUUP AI endpoints accept a `chain_id` parameter or return one in responses. Always pass the numeric chain ID for EVM chains.
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.eluup.ai/v1/signals?chain_id=8453" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```python Python
+import requests
+
+resp = requests.get(
+    "https://api.eluup.ai/v1/signals",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    params={"chain_id": 8453}
+)
+print(resp.json())
+```
+
+```typescript TypeScript
+const resp = await fetch("https://api.eluup.ai/v1/signals?chain_id=8453", {
+  headers: { Authorization: "Bearer YOUR_API_KEY" },
+});
+const data = await resp.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+## Example Response with Chain Information
+
+```json
+{
+  "id": "sig_01j4k...",
+  "chain_id": 8453,
+  "token_in": "0x4200000000000000000000000000000000000006",
+  "token_out": "0x532f27101965dd16442e59d40670faf5ebb142e4",
+  "signal_type": "buy",
+  "confidence": 0.92,
+  "timestamp": "2025-08-01T14:32:00Z"
+}
+```
+
+<Tip>
+  When BNB Chain and Solana support launches, your existing API integration only needs to change the `chain_id` or equivalent parameter. All other endpoints remain the same.
+</Tip>

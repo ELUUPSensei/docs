@@ -1,0 +1,51 @@
+---
+title: "ELUUP AI Changelog"
+sidebarTitle: "Changelog"
+description: "Track ELUUP AI releases, new endpoints, feature additions, and breaking changes across the API, CLI, and MCP server."
+---
+
+This page lists all notable releases for ELUUP AI, including API version updates, CLI releases, and new platform features. Entries are ordered newest first.
+
+## v1.0.0 — 2025-08-01
+
+<Note>
+  This is the initial public API release.
+</Note>
+
+**Highlights**
+
+- **Public API**: All core endpoints are now live under `https://api.eluup.ai/v1`.
+  - Agents: create, configure, start, stop, list, and monitor autonomous trading agents.
+  - Signals: retrieve buy/sell signals, stream real-time updates over SSE, and query historical signal data.
+  - Trades: list executed trades, view individual trade details, and inspect open positions.
+  - Wallets: connect wallets, check balances, and manage on-chain addresses.
+- **Base Chain Support**: Agents currently trade on Base (chain ID 8453) via Uniswap v3 and Aerodrome.
+- **MCP Server Launch**: The Model Context Protocol server is available for AI agent builders who want to integrate ELUUP AI signals and agent controls into their own LLM workflows.
+- **Authentication**: API key-based Bearer auth is required on all endpoints.
+
+## Beta — 2025-07-15
+
+**Highlights**
+
+- **CLI v0.9** is now available for download. Install it to manage agents and signals from your terminal.
+  - `eluup agent` commands: list, create, start, stop, and delete agents.
+  - `eluup signals` commands: fetch latest signals and subscribe to the SSE stream.
+- **Signal API** stabilized for the first wave of beta testers.
+- **Agent Engine** executes trades automatically based on incoming signals with built-in stop loss and take profit.
+
+## Alpha — 2025-07-01
+
+**Highlights**
+
+- **Private Alpha** launched for early partners and builders.
+- **Core Signal API** released for internal testing: REST endpoints to request buy/sell signals for DEX altcoins.
+- **Agent Engine** debuted with automatic entry and exit logic, position sizing, and risk management on every trade.
+- **Base Chain** was selected as the first supported network for alpha testing.
+
+## Versioning
+
+ELUUP AI uses calendar versioning tied to API releases. Breaking changes will be announced at least 30 days in advance and will be documented here with migration steps.
+
+<Tip>
+  Subscribe to the changelog RSS feed or check this page before upgrading your integration to stay aware of new endpoints and deprecations.
+</Tip>

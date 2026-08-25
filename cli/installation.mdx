@@ -1,0 +1,74 @@
+---
+title: "Install and Configure the ELUUP AI CLI"
+sidebarTitle: "Installation"
+description: "Install the ELUUP AI CLI with npm, yarn, or Homebrew, then authenticate and verify your setup in three terminal steps."
+---
+
+Install the ELUUP AI CLI on macOS, Linux, or Windows (via WSL) and authenticate in a few minutes. Once installed, you can run every API operation from the terminal.
+
+<Steps>
+  <Step title="Install the CLI">
+    Choose your preferred package manager and run the install command.
+
+    <CodeGroup>
+
+    ```bash npm
+    npm install -g @eluup/cli
+    ```
+
+    ```bash yarn
+    yarn global add @eluup/cli
+    ```
+
+    ```bash Homebrew
+    brew install eluupai/tap/eluup
+    ```
+
+    </CodeGroup>
+  </Step>
+  <Step title="Authenticate">
+    Run the login command to open a browser and authorize the CLI with your ELUUP AI account.
+
+    ```bash Terminal
+    eluup auth login
+    ```
+
+    A browser window opens to `https://app.eluup.ai/cli-auth`. After you authorize the CLI, your credentials are stored locally and you are returned to the terminal.
+
+    <Note>
+      Prefer an environment variable? Set `ELUUP_API_KEY` and skip interactive login entirely. This is useful for CI/CD pipelines and headless servers.
+    </Note>
+  </Step>
+  <Step title="Verify your setup">
+    Confirm the CLI is authenticated by checking your account details.
+
+    ```bash Terminal
+    eluup account
+    ```
+
+    You should see output similar to:
+
+    ```text Output
+    Account ID:    acc_2vPqN1xW4rL8
+    Email:         dev@example.com
+    Plan:          Pro
+    Active agents: 3
+    ```
+  </Step>
+</Steps>
+
+## Set your API key as an environment variable
+
+In CI pipelines, containers, or headless environments where browser login is not available, set the `ELUUP_API_KEY` environment variable to authenticate every command automatically.
+
+```bash
+export ELUUP_API_KEY="elu_api_xxxxxxxxxxxxxxxx"
+```
+
+On Windows PowerShell:
+
+```powershell
+$env:ELUUP_API_KEY="elu_api_xxxxxxxxxxxxxxxx"
+```
+
+The CLI reads this variable before any other authentication source. When it is set, commands run immediately without prompting for login.

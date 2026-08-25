@@ -1,0 +1,124 @@
+---
+title: "Create and Run Your First AI Project"
+sidebarTitle: "First Project"
+description: "Learn how to create a project in ELUUP AI, upload data, configure an AI task with a prompt, run it, and review your results in minutes."
+---
+
+ELUUP AI projects are where you bring data and AI together. In this guide, you will create a new project inside a workspace, add a data source, configure an AI task, run it, and review the results. No coding is required.
+
+## Before you start
+
+Make sure you have:
+
+- An active ELUUP AI account
+- Access to at least one workspace. If you do not have one yet, see [Workspaces](/concepts/workspaces).
+- A CSV file or a publicly accessible URL with data you want to analyze
+
+## Create a project
+
+<Steps>
+  <Step title="Open the Projects page">
+    From the ELUUP AI dashboard, select your workspace from the top-left workspace switcher. Then click **Projects** in the left sidebar.
+  </Step>
+  <Step title="Start a new project">
+    Click **New Project**. Enter a name that describes what the project will do, such as "Q3 Customer Feedback Analysis". Choose a visibility setting:
+
+    - **Private**: only you can access it
+    - **Team**: anyone in the workspace can view and collaborate
+  </Step>
+  <Step title="Save the project">
+    Click **Create**. You are taken to the project canvas where you add data and tasks.
+  </Step>
+</Steps>
+
+## Add a data source
+
+<Steps>
+  <Step title="Open the Data tab">
+    Inside your project, click the **Data** tab.
+  </Step>
+  <Step title="Choose a source type">
+    Click **Add Data Source** and pick one of the following:
+
+    - **Upload file**: drag and drop a CSV file, or click to browse your computer
+    - **Fetch from URL**: paste a URL that returns CSV or JSON data
+  </Step>
+  <Step title="Preview and confirm">
+    ELUUP AI shows a preview of the first 20 rows and detected column types. Review the preview, then click **Confirm** to add the source to your project.
+  </Step>
+</Steps>
+
+<Note>
+  File uploads are limited to 50 MB per file on the Starter plan and 500 MB on Professional and Enterprise plans.
+</Note>
+
+## Configure an AI task
+
+<Steps>
+  <Step title="Open the Tasks panel">
+    Click the **Tasks** tab in your project, then click **New Task**.
+  </Step>
+  <Step title="Select a model">
+    Choose an AI model from the dropdown. Options typically include GPT-4o, Claude 3.5 Sonnet, and ELUUP's optimized models. The model you pick affects speed, cost, and output quality.
+  </Step>
+  <Step title="Write your prompt">
+    In the prompt editor, describe what you want the AI to do with your data. You can reference columns using double braces, like `{{column_name}}`.
+
+    Here is an example prompt for a customer feedback dataset:
+
+    ```text
+    You are a support analyst. For each row in the dataset:
+    1. Read the {{feedback_text}} column.
+    2. Classify the sentiment as Positive, Neutral, or Negative.
+    3. Identify the top issue category from: Billing, Technical, Feature Request, or Other.
+    4. Write a one-sentence summary of the feedback.
+    
+    Return the results as a JSON array with keys: sentiment, category, summary.
+    ```
+  </Step>
+  <Step title="Set output format">
+    Choose how you want the results returned:
+
+    - **Structured JSON**: best for downstream processing
+    - **Plain text**: best for summaries and reports
+    - **Table**: flat rows you can export to CSV
+  </Step>
+  <Step title="Save the task">
+    Click **Save Task**. ELUUP AI validates your prompt and shows an estimated token cost.
+  </Step>
+</Steps>
+
+<Tip>
+  Use the **Preview** button to run the task on the first 5 rows only. This lets you refine your prompt before running it on the full dataset.
+</Tip>
+
+## Run the task and review results
+
+<Steps>
+  <Step title="Run the task">
+    Click **Run Task**. ELUUP AI processes every row in your dataset. You can leave the page; the run continues in the background.
+  </Step>
+  <Step title="Monitor progress">
+    A progress bar shows how many rows are completed. If any rows fail, they are listed in the **Errors** tab with a reason.
+  </Step>
+  <Step title="Review outputs">
+    Once complete, switch to the **Results** tab to see the AI-generated outputs side by side with your source data. You can sort, filter, and search the results.
+  </Step>
+  <Step title="Export or share">
+    Click **Export** to download results as CSV or JSON. To share with your team, click **Share** and set permissions.
+  </Step>
+</Steps>
+
+## Next steps
+
+Now that you have run your first project, you can go further:
+
+<CardGroup cols={2}>
+  <Card title="Automate tasks" icon="bolt" href="/guides/automations">
+    Schedule your AI task to run automatically or trigger it from another tool.
+  </Card>
+
+  <Card title="Connect integrations" icon="plug" href="/guides/integrations">
+    Bring in data from Google Drive, Slack, and more.
+  </Card>
+</CardGroup>

@@ -1,0 +1,45 @@
+---
+title: "ELUUP AI CLI: Manage Agents from Your Terminal"
+sidebarTitle: "Overview"
+description: "Use the ELUUP AI CLI to manage trading agents, fetch signals, and monitor DEX trades directly from your terminal without writing code."
+---
+
+The ELUUP AI CLI is a command-line interface that exposes every major API operation as a terminal command. You can create and start trading agents, stream buy and sell signals, inspect open positions, and review trade history without leaving your shell. It is built for developers and power users who prefer terminal workflows and want to script trading operations.
+
+Use the CLI to quickly prototype agent configurations, run one-off commands in CI pipelines, or build shell-based dashboards around your trading operations.
+
+## What you can do with the CLI
+
+<CardGroup cols={2}>
+  <Card title="Manage agents" icon="robot">
+    Create, start, stop, delete, and inspect trading agents directly from the terminal.
+  </Card>
+
+  <Card title="Fetch signals" icon="arrow-trend-up">
+    Pull the latest buy and sell signals for any supported chain with a single command.
+  </Card>
+
+  <Card title="Monitor trades" icon="chart-line">
+    List recent trades, open positions, and close positions on demand.
+  </Card>
+
+  <Card title="Authenticate easily" icon="key">
+    Log in via browser or set an environment variable for headless environments.
+  </Card>
+</CardGroup>
+
+## A quick taste
+
+Install the CLI, log in, and list your agents in three commands:
+
+<CodeGroup>
+
+```bash CLI
+npm install -g @eluup/cli
+eluup auth login
+eluup agent list
+```
+
+</CodeGroup>
+
+If you already have an API key, you can skip the browser login and set the `ELUUP_API_KEY` environment variable instead. See the [Installation](/cli/installation) page for details.

@@ -1,0 +1,100 @@
+---
+title: "Authenticate with the ELUUP AI API"
+sidebarTitle: "Authentication"
+description: "Learn how to generate and use ELUUP AI API keys. Pass your key as a Bearer token in the Authorization header, manage scopes, and rotate keys securely."
+---
+
+The ELUUP AI API uses API keys passed as Bearer tokens in the `Authorization` header. Every request to the API must include a valid key. This page explains how to generate keys, pass them in requests, and manage them securely.
+
+## Generate an API key
+
+1. Log in to your ELUUP AI account at [app.eluup.ai](https://app.eluup.ai)
+2. Go to **Settings \> API Keys**
+3. Click **Generate Key**
+4. Enter a descriptive name (for example, "Production Trading Bot")
+5. Select the scope you need (see below)
+6. Copy the key immediately. It is shown only once.
+
+<Warning>
+  Store your API key in a secure location. If you lose it, you will need to generate a new one. Never share keys in public repositories or client-side code.
+</Warning>
+
+## Pass your API key
+
+Include your key in the `Authorization` header on every request as a Bearer token.
+
+```bash
+curl -X GET "https://api.eluup.ai/v1/account" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+If the key is missing or invalid, the API returns a `401 Unauthorized` response:
+
+```json
+{
+  "error": {
+    "code": "unauthorized",
+    "message": "Invalid or missing API key"
+  }
+}
+```
+
+## Key scopes
+
+API keys can have one of two scopes. Choose the minimum scope needed for your integration.
+
+| Scope | Access |
+| --- | --- |
+| `read-only` | Fetch signals, list agents, view trades and balances. No write operations. |
+| `full-access` | All read operations plus create, update, delete, and start/stop agents, execute trades, and manage wallets. |
+
+When generating a key, select the scope that matches your use case. A read-only key is appropriate for dashboards and analytics. A full-access key is required for deploying and controlling trading agents.
+
+## Rotate your API key
+
+To rotate a key:
+
+1. Go to **Settings \> API Keys** in the ELUUP AI dashboard
+2. Find the key you want to rotate
+3. Click **Revoke** to invalidate it immediately
+4. Generate a new key with the same scope
+5. Update your application to use the new key
+
+Rotated keys are invalidated instantly. Any requests using the old key will receive a `401 Unauthorized` response.
+
+## Environment variables
+
+Never hardcode API keys in your source code. Load them from environment variables instead.
+
+<CodeGroup>
+
+```bash .env
+ELUUP_API_KEY=your_api_key_here
+```
+
+```typescript TypeScript
+import { EluupClient } from "@eluupai/sdk";
+
+const client = new EluupClient({
+  apiKey: process.env.ELUUP_API_KEY,
+});
+```
+
+```python Python
+import os
+from eluup_ai import EluupClient
+
+client = EluupClient(api_key=os.environ["ELUUP_API_KEY"])
+```
+
+</CodeGroup>
+
+<Note>
+  If you are building a client-side application, proxy API requests through your own backend. Exposing an API key in browser or mobile code puts your account and funds at risk.
+</Note>
+
+## Next steps
+
+- [Quickstart: deploy your first agent](/quickstart)
+- [API Reference overview](/api-reference/introduction)
+- [Error codes and handling](/reference/errors)

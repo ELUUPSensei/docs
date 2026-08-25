@@ -1,0 +1,125 @@
+---
+title: "List Trades"
+sidebarTitle: "List Trades"
+description: "List completed trades across your agents with filtering by agent and status, plus cursor pagination for reviewing historical performance."
+---
+
+Retrieve completed trades across all your agents or filter to a single agent. Use this endpoint to review historical performance, export records, or audit PnL and ROI across positions.
+
+## Endpoint
+
+```http
+GET /v1/trades
+```
+
+## Query parameters
+
+<ParamField query="agent_id" type="string">
+  Filter trades to a specific agent.
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by trade status. Supported values: `open`, `closed`.
+</ParamField>
+
+<ParamField query="limit" default="20" type="integer">
+  Number of trades per page. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Opaque cursor from a previous response to fetch the next page.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/trades?agent_id=agent_2vL9xQpW&status=closed&limit=10"
+```
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array of trade objects.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique trade identifier.
+</ResponseField>
+
+<ResponseField name="data[].agent_id" type="string">
+  ID of the agent that executed the trade.
+</ResponseField>
+
+<ResponseField name="data[].token_address" type="string">
+  Contract address of the traded token.
+</ResponseField>
+
+<ResponseField name="data[].token_symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="data[].chain_id" type="integer">
+  Chain the trade occurred on.
+</ResponseField>
+
+<ResponseField name="data[].direction" type="string">
+  Either `BUY` or `SELL`.
+</ResponseField>
+
+<ResponseField name="data[].entry_price_usd" type="float">
+  Entry price in USD.
+</ResponseField>
+
+<ResponseField name="data[].exit_price_usd" type="float">
+  Exit price in USD. Null if the trade is still open.
+</ResponseField>
+
+<ResponseField name="data[].pnl_usd" type="float">
+  Realized profit or loss in USD. Null if the trade is open.
+</ResponseField>
+
+<ResponseField name="data[].roi_pct" type="float">
+  Return on investment percentage. Null if the trade is open.
+</ResponseField>
+
+<ResponseField name="data[].status" type="string">
+  `open` or `closed`.
+</ResponseField>
+
+<ResponseField name="data[].opened_at" type="integer">
+  Unix timestamp when the trade was opened.
+</ResponseField>
+
+<ResponseField name="data[].closed_at" type="integer">
+  Unix timestamp when the trade was closed. Null if still open.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string">
+  Cursor for the next page, omitted when there are no more results.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "trade_9aBc2DeF8Gh",
+      "agent_id": "agent_2vL9xQpW",
+      "token_address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+      "token_symbol": "BRETT",
+      "chain_id": 8453,
+      "direction": "BUY",
+      "entry_price_usd": 0.0342,
+      "exit_price_usd": 0.0427,
+      "pnl_usd": 85.50,
+      "roi_pct": 24.85,
+      "status": "closed",
+      "opened_at": 1715603200,
+      "closed_at": 1715700000
+    }
+  ],
+  "next_cursor": "eyJpZCI6InRyYWRlXzJ4WXozVnFRNksiLCJ0cyI6MTcxNTcwMDAwMH0"
+}
+```

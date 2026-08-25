@@ -1,0 +1,105 @@
+---
+title: "ELUUP AI API Error Codes and Handling"
+sidebarTitle: "Errors"
+description: "Complete reference for ELUUP AI API error codes, HTTP status meanings, and retry strategies to build resilient trading integrations."
+---
+
+All ELUUP AI API errors return a consistent JSON structure with an `error` object containing a `code` string and a human-readable `message`. Your integration should check the HTTP status code and the error code to decide how to respond.
+
+## Error Response Format
+
+Every failed request returns a JSON body in this shape:
+
+```json
+{
+  "error": {
+    "code": "rate_limited",
+    "message": "You have exceeded the rate limit. Please retry after 42 seconds."
+  }
+}
+```
+
+## Error Codes
+
+| HTTP Status | Code | Meaning | What to Do |
+| --- | --- | --- | --- |
+| 400 | `invalid_request` | The request body or query parameters are malformed or missing required fields. | Review the request payload against the endpoint documentation and fix any validation issues. |
+| 401 | `unauthorized` | The API key is missing, invalid, or expired. | Verify your `Authorization: Bearer <API_KEY>` header and ensure your key is active in the dashboard. |
+| 403 | `forbidden` | The API key does not have permission for this operation. | Check the key's scope. Upgrade your plan or rotate the key if needed. |
+| 404 | `not_found` | The requested resource (agent, trade, wallet, or position) does not exist. | Confirm the ID is correct and belongs to your account. |
+| 409 | `conflict` | The resource is in a conflicting state. Common when trying to start an agent that is already running. | Check the current state of the resource before retrying, or use `GET` to confirm the latest status. |
+| 422 | `validation_error` | The request passed syntax checks but failed business logic validation. | Review the response `message` for field-specific details and adjust values such as position size or token address. |
+| 429 | `rate_limited` | You have sent too many requests and hit the rate limit. | Retry with exponential backoff using the `X-RateLimit-Reset` header. See [Rate Limits](/reference/rate-limits). |
+| 500 | `internal_error` | An unexpected server error occurred. | Retry once or twice with backoff. If the error persists, contact support with the request ID. |
+| 503 | `service_unavailable` | The service is temporarily unavailable, typically during maintenance or high load. | Retry with exponential backoff. Check the status page if available. |
+
+## Retry Guidance
+
+Treat 429 and 503 as retryable. Use exponential backoff with jitter to avoid thundering herd problems.
+
+<Steps>
+  <Step title="Inspect the response headers">
+    Read `X-RateLimit-Reset` (Unix timestamp) or `Retry-After` (seconds) when present.
+  </Step>
+  <Step title="Calculate backoff">
+    Wait at least `2^attempt * 1000ms` before retrying, capped at 60 seconds. Add random jitter.
+  </Step>
+  <Step title="Retry with a limit">
+    Attempt up to 5 retries for 429/503. Do not retry 400, 401, 403, 404, 409, 422, or 500 indefinitely.
+  </Step>
+</Steps>
+
+## Example: Handling a 429 in Code
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://api.eluup.ai/v1/signals" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+# HTTP/1.1 429 Too Many Requests
+# X-RateLimit-Reset: 1690000000
+```
+
+```python Python
+import time, random, requests
+
+def get_signals(api_key, max_retries=5):
+    for attempt in range(max_retries):
+        resp = requests.get(
+            "https://api.eluup.ai/v1/signals",
+            headers={"Authorization": f"Bearer {api_key}"}
+        )
+        if resp.status_code == 429:
+            reset = int(resp.headers.get("X-RateLimit-Reset", time.time() + 30))
+            wait = max(reset - time.time(), 2 ** attempt + random.uniform(0, 1))
+            time.sleep(wait)
+            continue
+        resp.raise_for_status()
+        return resp.json()
+    raise Exception("Rate limited after retries")
+```
+
+```typescript TypeScript
+async function getSignals(apiKey: string, maxRetries = 5) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const resp = await fetch("https://api.eluup.ai/v1/signals", {
+      headers: { Authorization: `Bearer ${apiKey}` },
+    });
+    if (resp.status === 429) {
+      const reset = parseInt(resp.headers.get("X-RateLimit-Reset") || "0", 10);
+      const wait = Math.max(reset - Math.floor(Date.now() / 1000), 2 ** attempt + Math.random());
+      await new Promise((r) => setTimeout(r, wait * 1000));
+      continue;
+    }
+    if (!resp.ok) throw new Error(await resp.text());
+    return resp.json();
+  }
+  throw new Error("Rate limited after retries");
+}
+```
+
+</CodeGroup>
+
+<Note>
+  All 4xx errors indicate a problem with your request and should not be retried without modification. 500 errors may be transient, but persistent 500s should be reported to support.
+</Note>

@@ -1,0 +1,54 @@
+---
+title: "Get Account Details"
+sidebarTitle: "Get Account"
+description: "Retrieve your account profile, subscription plan, creation date, and a masked view of your API key for auditing and dashboard display."
+---
+
+Retrieve your ELUUP AI account profile, including your subscription plan and a masked view of your active API key. Use this endpoint to verify credentials and display plan information in your own dashboard.
+
+## Endpoint
+
+```http
+GET /v1/account
+```
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/account"
+```
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique account identifier.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  Email address associated with the account.
+</ResponseField>
+
+<ResponseField name="plan" type="string">
+  Subscription plan name (for example, `free`, `pro`, `enterprise`).
+</ResponseField>
+
+<ResponseField name="created_at" type="integer">
+  Unix timestamp when the account was created.
+</ResponseField>
+
+<ResponseField name="api_key_last4" type="string">
+  Last four characters of the currently active API key.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "acct_3xYz1WvQ5Mn",
+  "email": "trader@example.com",
+  "plan": "pro",
+  "created_at": 1715000000,
+  "api_key_last4": "a9B2"
+}
+```

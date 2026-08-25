@@ -1,0 +1,247 @@
+---
+title: "Get started with ELUUP AI in 5 minutes"
+description: "Deploy your first ELUUP AI trading agent in 5 minutes. Get an API key, install the SDK, authenticate, fetch a signal, and create an agent with working code examples."
+sidebarTitle: "Quickstart"
+---
+
+This guide walks you through your first ELUUP API request and deploying a trading agent in five minutes. You will get an API key, authenticate, fetch a live trading signal, and create an autonomous agent that trades on Base.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- An [ELUUP AI account](https://app.eluup.ai)
+- An API key from your account settings
+- Node.js 18\+ or Python 3.9\+ installed locally
+
+## Step 1: Get your API key
+
+1. Log in to [app.eluup.ai](https://app.eluup.ai)
+2. Navigate to **Settings \> API Keys**
+3. Click **Generate Key** and copy the value
+4. Store it securely (you will not see it again)
+
+## Step 2: Install the SDK
+
+Choose your preferred language and install the ELUUP AI SDK.
+
+<CodeGroup>
+
+```bash npm
+npm install @eluupai/sdk
+```
+
+```bash pip
+pip install eluup-ai
+```
+
+</CodeGroup>
+
+## Step 3: Authenticate
+
+Verify your API key is working by calling the account endpoint. All requests require an `Authorization: Bearer <API_KEY>` header.
+
+<CodeGroup>
+
+```bash curl
+curl -X GET "https://api.eluup.ai/v1/account" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```typescript TypeScript
+import { EluupClient } from "@eluupai/sdk";
+
+const client = new EluupClient({ apiKey: "YOUR_API_KEY" });
+const account = await client.account.get();
+console.log(account);
+```
+
+```python Python
+from eluup_ai import EluupClient
+
+client = EluupClient(api_key="YOUR_API_KEY")
+account = client.account.get()
+print(account)
+```
+
+</CodeGroup>
+
+**Expected response:**
+
+```json
+{
+  "id": "acc_2vRqK9mNpL5wXzYh",
+  "email": "trader@example.com",
+  "plan": "pro",
+  "created_at": "2024-11-15T08:32:00Z"
+}
+```
+
+## Step 4: Fetch your first trading signal
+
+Request a buy or sell signal for tokens on Base chain (chain ID 8453).
+
+<CodeGroup>
+
+```bash curl
+curl -X GET "https://api.eluup.ai/v1/signals?chain=8453&limit=1" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```typescript TypeScript
+const signals = await client.signals.list({ chain: 8453, limit: 1 });
+console.log(signals);
+```
+
+```python Python
+signals = client.signals.list(chain=8453, limit=1)
+print(signals)
+```
+
+</CodeGroup>
+
+**Expected response:**
+
+```json
+{
+  "data": [
+    {
+      "id": "sig_8aB3cD4eF5gH6iJ7kL8",
+      "type": "buy",
+      "chain_id": 8453,
+      "token_address": "0xA0b86a33E6441E6C7D3D4B4f6e8F4e9C2d1A3b5C",
+      "token_symbol": "EXMP",
+      "confidence": 0.94,
+      "price_usd": 0.0042,
+      "timestamp": "2025-01-20T14:32:10Z"
+    }
+  ]
+}
+```
+
+## Step 5: Deploy your first agent
+
+Create an autonomous agent that listens for signals and trades automatically with built-in risk management.
+
+<CodeGroup>
+
+```bash curl
+curl -X POST "https://api.eluup.ai/v1/agents" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Base Alpha Bot",
+    "chain_id": 8453,
+    "wallet_id": "wal_3xMsT7nPqR8uVwYz",
+    "strategy": "high_confidence",
+    "risk_settings": {
+      "max_position_size_usd": 500,
+      "stop_loss_percent": 5,
+      "take_profit_percent": 20,
+      "trailing_stop_percent": 3
+    },
+    "filters": {
+      "min_confidence": 0.85,
+      "max_slippage_percent": 2
+    }
+  }'
+```
+
+```typescript TypeScript
+const agent = await client.agents.create({
+  name: "Base Alpha Bot",
+  chain_id: 8453,
+  wallet_id: "wal_3xMsT7nPqR8uVwYz",
+  strategy: "high_confidence",
+  risk_settings: {
+    max_position_size_usd: 500,
+    stop_loss_percent: 5,
+    take_profit_percent: 20,
+    trailing_stop_percent: 3,
+  },
+  filters: {
+    min_confidence: 0.85,
+    max_slippage_percent: 2,
+  },
+});
+console.log(agent);
+```
+
+```python Python
+agent = client.agents.create(
+    name="Base Alpha Bot",
+    chain_id=8453,
+    wallet_id="wal_3xMsT7nPqR8uVwYz",
+    strategy="high_confidence",
+    risk_settings={
+        "max_position_size_usd": 500,
+        "stop_loss_percent": 5,
+        "take_profit_percent": 20,
+        "trailing_stop_percent": 3,
+    },
+    filters={
+        "min_confidence": 0.85,
+        "max_slippage_percent": 2,
+    },
+)
+print(agent)
+```
+
+</CodeGroup>
+
+**Expected response:**
+
+```json
+{
+  "id": "agt_9cD4eF5gH6iJ7kL8mN9",
+  "name": "Base Alpha Bot",
+  "status": "stopped",
+  "chain_id": 8453,
+  "wallet_id": "wal_3xMsT7nPqR8uVwYz",
+  "strategy": "high_confidence",
+  "risk_settings": {
+    "max_position_size_usd": 500,
+    "stop_loss_percent": 5,
+    "take_profit_percent": 20,
+    "trailing_stop_percent": 3
+  },
+  "created_at": "2025-01-20T14:35:22Z"
+}
+```
+
+Start the agent to begin trading:
+
+<CodeGroup>
+
+```bash curl
+curl -X POST "https://api.eluup.ai/v1/agents/agt_9cD4eF5gH6iJ7kL8mN9/start" \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```typescript TypeScript
+await client.agents.start("agt_9cD4eF5gH6iJ7kL8mN9");
+```
+
+```python Python
+client.agents.start("agt_9cD4eF5gH6iJ7kL8mN9")
+```
+
+</CodeGroup>
+
+## Next steps
+
+Your agent is now live and monitoring signals. Explore these guides to go deeper:
+
+<CardGroup cols={3}>
+  <Card title="Agents Guide" icon="robot" href="/agents/overview">
+    Learn how to configure strategies and monitor performance.
+  </Card>
+
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
+    Explore all endpoints for signals, trades, and wallets.
+  </Card>
+
+  <Card title="MCP Server" icon="plug" href="/mcp/overview">
+    Integrate ELUUP AI with MCP-compatible AI agents.
+  </Card>
+</CardGroup>

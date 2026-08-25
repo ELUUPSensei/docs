@@ -1,0 +1,84 @@
+---
+title: "Get Wallet Balance"
+sidebarTitle: "Get Balance"
+description: "Check native and token balances for a connected wallet across Base and BNB Chain in real time."
+---
+
+Fetch the current native asset balance and a list of token balances for a connected wallet. Use this before assigning a wallet to an agent to verify there is sufficient capital for trading.
+
+## Endpoint
+
+```http
+GET /v1/wallets/{wallet_id}/balance
+```
+
+## Path parameters
+
+<ParamField path="wallet_id" type="string" required>
+  Unique identifier of the connected wallet.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/wallets/wallet_1aB3cD5e/balance"
+```
+
+## Response
+
+<ResponseField name="wallet_id" type="string">
+  Wallet identifier.
+</ResponseField>
+
+<ResponseField name="native_balance_usd" type="float">
+  Native asset balance (ETH on Base, BNB on BNB Chain) expressed in USD.
+</ResponseField>
+
+<ResponseField name="token_balances" type="array">
+  Array of token balance objects.
+</ResponseField>
+
+<ResponseField name="token_balances[].token_address" type="string">
+  Token contract address.
+</ResponseField>
+
+<ResponseField name="token_balances[].token_symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="token_balances[].balance" type="float">
+  Token balance in the token's native units.
+</ResponseField>
+
+<ResponseField name="token_balances[].balance_usd" type="float">
+  Token balance expressed in USD.
+</ResponseField>
+
+<ResponseField name="updated_at" type="integer">
+  Unix timestamp of the last balance refresh.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "wallet_id": "wallet_1aB3cD5e",
+  "native_balance_usd": 1250.45,
+  "token_balances": [
+    {
+      "token_address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+      "token_symbol": "BRETT",
+      "balance": 150000.0,
+      "balance_usd": 5130.00
+    },
+    {
+      "token_address": "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+      "token_symbol": "DEGEN",
+      "balance": 500000.0,
+      "balance_usd": 1050.00
+    }
+  ],
+  "updated_at": 1716400000
+}
+```

@@ -1,0 +1,101 @@
+---
+title: "Get Trading Signals"
+sidebarTitle: "Get Signals"
+description: "Retrieve the latest buy and sell signals from ELUUP AI for a specific chain, with optional confidence filtering and pagination for DEX altcoin trading decisions."
+---
+
+Fetch the most recent AI-generated trading signals for a given chain. Use this endpoint to inspect current BUY and SELL recommendations, token prices, and model confidence before your trading agent acts on them.
+
+## Endpoint
+
+```http
+GET /v1/signals
+```
+
+## Query parameters
+
+<ParamField query="chain" type="integer" required>
+  Chain ID to filter signals. Use `8453` for Base or `56` for BNB Chain.
+</ParamField>
+
+<ParamField query="limit" default="20" type="integer">
+  Number of signals to return. Maximum is `100`.
+</ParamField>
+
+<ParamField query="min_confidence" type="float">
+  Minimum confidence threshold from `0.0` to `1.0`. Only signals with confidence greater than or equal to this value are returned.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/signals?chain=8453&limit=10&min_confidence=0.75"
+```
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array of signal objects.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique identifier for the signal.
+</ResponseField>
+
+<ResponseField name="data[].token_address" type="string">
+  Contract address of the token on the target chain.
+</ResponseField>
+
+<ResponseField name="data[].token_symbol" type="string">
+  Token symbol (for example, `BRETT`).
+</ResponseField>
+
+<ResponseField name="data[].chain_id" type="integer">
+  Chain the signal targets.
+</ResponseField>
+
+<ResponseField name="data[].direction" type="string">
+  Either `BUY` or `SELL`.
+</ResponseField>
+
+<ResponseField name="data[].confidence" type="float">
+  Model confidence from `0.0` to `1.0`.
+</ResponseField>
+
+<ResponseField name="data[].price_usd" type="float">
+  Estimated token price in USD at signal time.
+</ResponseField>
+
+<ResponseField name="data[].timestamp" type="integer">
+  Unix timestamp when the signal was generated.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "sig_7aBc3DeF9Gh",
+      "token_address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+      "token_symbol": "BRETT",
+      "chain_id": 8453,
+      "direction": "BUY",
+      "confidence": 0.88,
+      "price_usd": 0.0342,
+      "timestamp": 1715603200
+    },
+    {
+      "id": "sig_2xYz8WvQ4Mn",
+      "token_address": "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+      "token_symbol": "DEGEN",
+      "chain_id": 8453,
+      "direction": "SELL",
+      "confidence": 0.82,
+      "price_usd": 0.00185,
+      "timestamp": 1715602900
+    }
+  ]
+}
+```

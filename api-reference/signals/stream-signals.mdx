@@ -1,0 +1,117 @@
+---
+title: "Stream Trading Signals in Real Time"
+sidebarTitle: "Stream Signals"
+description: "Consume real-time AI trading signals via Server-Sent Events (SSE) on Base and BNB Chain. Use for live integrations with no rate-limit impact."
+---
+
+Subscribe to a live stream of AI-generated trading signals using Server-Sent Events (SSE). This is ideal for real-time dashboards, alert bots, and integrations that react to new opportunities as soon as they are detected.
+
+## Endpoint
+
+```http
+GET /v1/signals/stream
+```
+
+## Query parameters
+
+<ParamField query="chain" type="integer" required>
+  Chain ID to stream signals from. Use `8453` for Base or `56` for BNB Chain.
+</ParamField>
+
+## SSE format
+
+The connection remains open and emits `message` events. Each event contains a JSON payload in its `data` field. Two event types are supported:
+
+- `signal` — a new BUY or SELL signal.
+- `heartbeat` — a periodic keep-alive message with no payload action.
+
+Event type is indicated by the `type` field inside the JSON payload.
+
+## EventSource example
+
+```javascript
+const url = 'https://api.eluup.ai/v1/signals/stream?chain=8453';
+const eventSource = new EventSource(url, {
+  headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+});
+
+eventSource.onmessage = (event) => {
+  const payload = JSON.parse(event.data);
+  if (payload.type === 'heartbeat') {
+    console.log('heartbeat');
+    return;
+  }
+  console.log('Signal:', payload);
+};
+
+eventSource.onerror = (err) => {
+  console.error('SSE error', err);
+};
+```
+
+## Signal event fields
+
+<ResponseField name="type" type="string">
+  Always `signal` for trading signals.
+</ResponseField>
+
+<ResponseField name="id" type="string">
+  Unique signal identifier.
+</ResponseField>
+
+<ResponseField name="token_address" type="string">
+  Token contract address.
+</ResponseField>
+
+<ResponseField name="token_symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="chain_id" type="integer">
+  Chain ID.
+</ResponseField>
+
+<ResponseField name="direction" type="string">
+  Either `BUY` or `SELL`.
+</ResponseField>
+
+<ResponseField name="confidence" type="float">
+  Model confidence from `0.0` to `1.0`.
+</ResponseField>
+
+<ResponseField name="price_usd" type="float">
+  Estimated token price in USD when the signal fired.
+</ResponseField>
+
+<ResponseField name="timestamp" type="integer">
+  Unix timestamp of the signal.
+</ResponseField>
+
+### Example signal event
+
+```json
+{
+  "type": "signal",
+  "id": "sig_7aBc3DeF9Gh",
+  "token_address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+  "token_symbol": "BRETT",
+  "chain_id": 8453,
+  "direction": "BUY",
+  "confidence": 0.88,
+  "price_usd": 0.0342,
+  "timestamp": 1715603200
+}
+```
+
+### Example heartbeat event
+
+```json
+{
+  "type": "heartbeat",
+  "timestamp": 1715603500
+}
+```
+
+<Note>
+  The SSE stream does not count against your standard API rate limits.
+</Note>

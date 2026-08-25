@@ -1,0 +1,29 @@
+---
+title: "AI Models Available in ELUUP AI"
+sidebarTitle: "AI Models"
+description: "Browse the AI models available in ELUUP AI, including language, vision, and code models, and learn how to pick the right one based on task type and context needs."
+---
+
+ELUUP AI gives you access to a curated set of AI models designed for different kinds of work. Whether you are generating text, analyzing images, or reviewing code, choosing the right model improves quality, speed, and cost efficiency. You can switch models at any time inside a workspace or automation step.
+
+When you create a new task or automation, you select a model from the dropdown in the AI step builder. The platform handles token limits, formatting, and output parsing so you can focus on the prompt and the data.
+
+## How to choose a model for a task
+
+Start by identifying the type of output you need. Text-heavy tasks like summarizing documents or drafting emails call for a large language model. Tasks that involve analyzing screenshots, diagrams, or photos need a vision model. If you want suggestions, refactoring, or bug detection in code, choose a code-specialized model.
+
+Context window size also matters. A longer context window lets you pass more text or more images in a single request, which is useful for long reports or multi-image analysis. Shorter-context models tend to be faster and more economical for simple, focused prompts.
+
+## Model reference
+
+| Model | Best For | Context Window |
+| --- | --- | --- |
+| ELUUP Text Pro | Long-form writing, detailed analysis, multi-step reasoning | 128K tokens |
+| ELUUP Text Standard | Everyday text tasks, summarization, chat, and email drafting | 32K tokens |
+| ELUUP Vision | Image analysis, OCR, chart interpretation, visual QA | 16K tokens \+ 4 images |
+| ELUUP Code | Code generation, refactoring, debugging, and review | 64K tokens |
+| ELUUP Compact | Quick responses, classification, and simple extractions | 8K tokens |
+
+<Tip>
+  You can mix models inside a single automation. For example, use ELUUP Vision to extract text from an uploaded image, then pass that text to ELUUP Text Pro for a detailed summary.
+</Tip>

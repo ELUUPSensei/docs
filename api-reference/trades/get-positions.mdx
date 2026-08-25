@@ -1,0 +1,115 @@
+---
+title: "Get Open Positions"
+sidebarTitle: "Get Positions"
+description: "List all currently open positions with real-time unrealized PnL, current prices, and active stop levels."
+---
+
+View all open positions across your active agents. Use this endpoint to monitor unrealized PnL, verify that stop losses and take profits are correctly set, and react to market changes in real time.
+
+## Endpoint
+
+```http
+GET /v1/positions
+```
+
+## Query parameters
+
+<ParamField query="agent_id" type="string">
+  Optionally filter open positions to a single agent.
+</ParamField>
+
+<ParamField query="limit" default="20" type="integer">
+  Number of positions per page. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Opaque cursor from a previous response to fetch the next page.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/positions?agent_id=agent_2vL9xQpW&limit=10"
+```
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array of open position objects.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique position identifier.
+</ResponseField>
+
+<ResponseField name="data[].agent_id" type="string">
+  ID of the agent managing this position.
+</ResponseField>
+
+<ResponseField name="data[].token_address" type="string">
+  Token contract address.
+</ResponseField>
+
+<ResponseField name="data[].token_symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="data[].chain_id" type="integer">
+  Chain ID.
+</ResponseField>
+
+<ResponseField name="data[].entry_price_usd" type="float">
+  Average entry price in USD.
+</ResponseField>
+
+<ResponseField name="data[].current_price_usd" type="float">
+  Latest market price in USD.
+</ResponseField>
+
+<ResponseField name="data[].unrealized_pnl_usd" type="float">
+  Unrealized profit or loss in USD.
+</ResponseField>
+
+<ResponseField name="data[].stop_loss_price" type="float">
+  Trigger price for the stop loss.
+</ResponseField>
+
+<ResponseField name="data[].take_profit_price" type="float">
+  Trigger price for take profit.
+</ResponseField>
+
+<ResponseField name="data[].trailing_stop_price" type="float">
+  Current trailing stop price. Updated as the position moves in your favor.
+</ResponseField>
+
+<ResponseField name="data[].opened_at" type="integer">
+  Unix timestamp when the position was opened.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string">
+  Cursor for the next page, omitted when there are no more results.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "pos_3xYz1WvQ5Mn",
+      "agent_id": "agent_2vL9xQpW",
+      "token_address": "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+      "token_symbol": "DEGEN",
+      "chain_id": 8453,
+      "entry_price_usd": 0.00185,
+      "current_price_usd": 0.00210,
+      "unrealized_pnl_usd": 135.20,
+      "stop_loss_price": 0.00170,
+      "take_profit_price": 0.00231,
+      "trailing_stop_price": 0.00189,
+      "opened_at": 1715800000
+    }
+  ]
+}
+```

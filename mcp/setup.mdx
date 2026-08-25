@@ -1,0 +1,74 @@
+---
+title: "Connect the ELUUP AI MCP Server to Your AI Agent"
+sidebarTitle: "Setup"
+description: "Configure the ELUUP AI MCP server in Cursor, Claude Desktop, or any MCP client with an API key and SSE transport in under five minutes."
+---
+
+Connect the ELUUP AI MCP server to your AI agent in three steps. Once configured, your agent can fetch signals, create trading agents, and monitor positions by natural language commands.
+
+<Steps>
+  <Step title="Get your API key">
+    Log in to [app.eluup.ai](https://app.eluup.ai), open **Settings \> API Keys**, and create a new key. Copy it to your clipboard. You will need it for every MCP client you configure.
+  </Step>
+  <Step title="Add the MCP server to your client">
+    The ELUUP MCP server uses SSE transport over HTTPS. Add the following base configuration to your MCP client. Replace `<API_KEY>` with your real key.
+
+    ```json MCP config
+    {
+      "url": "https://mcp.eluup.ai/sse",
+      "headers": {
+        "Authorization": "Bearer <API_KEY>"
+      }
+    }
+    ```
+  </Step>
+  <Step title="Configure Cursor">
+    In your project root, create or edit `.cursor/mcp.json`:
+
+    ```json .cursor/mcp.json
+    {
+      "mcpServers": {
+        "eluup": {
+          "url": "https://mcp.eluup.ai/sse",
+          "headers": {
+            "Authorization": "Bearer <API_KEY>"
+          }
+        }
+      }
+    }
+    ```
+
+    Restart Cursor. The ELUUP tools appear in the MCP panel and are available in chat.
+  </Step>
+  <Step title="Configure Claude Desktop">
+    Open Claude Desktop settings and edit the MCP server configuration file. Add the ELUUP server block:
+
+    ```json claude_desktop_config.json
+    {
+      "mcpServers": {
+        "eluup": {
+          "url": "https://mcp.eluup.ai/sse",
+          "headers": {
+            "Authorization": "Bearer <API_KEY>"
+          }
+        }
+      }
+    }
+    ```
+
+    Save and restart Claude Desktop.
+  </Step>
+  <Step title="Test with a natural language command">
+    Open chat in your AI client and send a command such as:
+
+    ```text
+    Show me the latest buy signals on Base.
+    ```
+
+    The agent will invoke the `get_signals` tool, request signals for chain ID 8453, and return formatted results for you.
+  </Step>
+</Steps>
+
+<Tip>
+  The ELUUP MCP server supports SSE transport only. Ensure your client supports SSE-based MCP servers. Most popular clients, including Cursor and Claude Desktop, support this transport natively.
+</Tip>

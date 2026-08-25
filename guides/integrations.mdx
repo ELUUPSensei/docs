@@ -1,0 +1,123 @@
+---
+title: "Connect ELUUP AI to Your Favorite Tools"
+sidebarTitle: "Integrations"
+description: "Connect Slack, Google Drive, and Zapier to ELUUP AI to send notifications, import data, and automate cross-tool workflows."
+---
+
+Integrations let ELUUP AI work with the tools your team already uses. You can import data from cloud storage, send task results to messaging channels, and trigger AI workflows from external apps. This guide covers how to connect Slack, Google Drive, and Zapier.
+
+## Open the Integrations page
+
+<Steps>
+  <Step title="Navigate to Integrations">
+    From the ELUUP AI dashboard, click **Settings** in the left sidebar, then select **Integrations**.
+  </Step>
+  <Step title="Browse available integrations">
+    You will see a list of supported apps. Click any app card to start the connection flow.
+  </Step>
+</Steps>
+
+<Note>
+  Slack and Google Drive integrations are available on all paid plans. Zapier integration requires a Professional or Enterprise plan.
+</Note>
+
+## Connect Slack
+
+Connect Slack to receive notifications when AI tasks complete, when automations run, or when errors occur.
+
+<Steps>
+  <Step title="Start the Slack connection">
+    On the Integrations page, click **Slack**, then click **Connect**.
+  </Step>
+  <Step title="Authorize ELUUP AI">
+    You are redirected to Slack. Sign in to your workspace if needed, then review the permissions and click **Allow**.
+  </Step>
+  <Step title="Choose a destination channel">
+    After authorization, return to ELUUP AI. Pick the Slack channel where notifications should be posted, such as `#ai-alerts` or `#project-updates`.
+  </Step>
+  <Step title="Set notification preferences">
+    Choose which events to send:
+
+    - Task completed
+    - Task failed
+    - Automation triggered
+  </Step>
+  <Step title="Save the connection">
+    Click **Save**. A test message is sent to your chosen channel to confirm the connection is active.
+  </Step>
+</Steps>
+
+<Tip>
+  You can connect multiple Slack channels and assign each one to a different project or automation.
+</Tip>
+
+## Connect Google Drive
+
+Connect Google Drive to import files directly into your projects without downloading them first.
+
+<Steps>
+  <Step title="Start the Google Drive connection">
+    On the Integrations page, click **Google Drive**, then click **Connect**.
+  </Step>
+  <Step title="Authorize access">
+    Sign in with the Google account that owns the files you want to use. Grant ELUUP AI permission to view and download files.
+  </Step>
+  <Step title="Select a default folder (optional)">
+    Choose a Google Drive folder as your default import location. You can still browse other folders when adding data to a project.
+  </Step>
+  <Step title="Confirm the connection">
+    Click **Finish**. Google Drive now appears as a data source option inside every project in your workspace.
+  </Step>
+</Steps>
+
+<Warning>
+  ELUUP AI can only access files you explicitly select during import. It does not scan or index your entire Drive.
+</Warning>
+
+## Connect Zapier
+
+Connect Zapier to trigger ELUUP AI tasks from thousands of other apps, or send ELUUP AI results to those apps.
+
+<Steps>
+  <Step title="Start the Zapier connection">
+    On the Integrations page, click **Zapier**, then click **Connect**.
+  </Step>
+  <Step title="Copy your API key">
+    ELUUP AI displays a workspace API key. Copy it. This key lets Zapier authenticate on behalf of your workspace.
+  </Step>
+  <Step title="Create a Zap">
+    In Zapier, create a new Zap. Search for the **ELUUP AI** app and select it as a trigger or action.
+  </Step>
+  <Step title="Paste your API key">
+    When prompted, paste the API key you copied. Zapier verifies the connection and lists your available projects and tasks.
+  </Step>
+  <Step title="Configure the trigger or action">
+    Choose the event you want to automate. For example:
+
+    - **Trigger**: when a new row is added to a Google Sheet, run an ELUUP AI task
+    - **Action**: when an ELUUP AI task completes, create a Trello card with the results
+  </Step>
+  <Step title="Test and publish">
+    Run a test in Zapier to confirm data flows correctly. Then turn on the Zap.
+  </Step>
+</Steps>
+
+## Manage and disconnect integrations
+
+From the Integrations page, you can view all active connections. Click an integration to:
+
+- Edit notification channels or folder mappings
+- Reconnect if the authorization expires
+- Disconnect entirely, which removes all permissions immediately
+
+<Note>
+  Disconnecting an integration does not delete project data already imported through that integration.
+</Note>
+
+## Next steps
+
+After connecting your tools, put them to work automatically:
+
+<Card title="Set up automations" icon="bolt" href="/guides/automations">
+  Schedule AI tasks or trigger them via webhooks so your integrations run hands-free.
+</Card>

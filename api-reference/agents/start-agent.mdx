@@ -1,0 +1,59 @@
+---
+title: "Start a Trading Agent"
+sidebarTitle: "Start Agent"
+description: "Activate an idle trading agent so it begins monitoring signals and executing trades on chain."
+---
+
+Start an idle trading agent. Once active, the agent begins subscribing to AI buy/sell signals and will automatically enter and exit positions on the configured chain according to its risk rules.
+
+## Endpoint
+
+```http
+POST /v1/agents/{agent_id}/start
+```
+
+## Path parameters
+
+<ParamField path="agent_id" type="string" required>
+  Unique identifier of the agent to start.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.eluup.ai/v1/agents/agent_2vL9xQpW/start" \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+## Response
+
+Returns the agent object with its updated `status` set to `active`.
+
+<ResponseField name="id" type="string">
+  Unique agent identifier.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  `active` when the agent has started successfully.
+</ResponseField>
+
+<ResponseField name="started_at" type="integer">
+  Unix timestamp when the agent transitioned to active.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "agent_2vL9xQpW",
+  "name": "Base Alpha Bot",
+  "status": "active",
+  "chain_id": 8453,
+  "wallet_id": "wallet_1aB3cD5e",
+  "started_at": 1716400000
+}
+```
+
+<Warning>
+  If the agent is already `active`, the API returns `409 Conflict`.
+</Warning>

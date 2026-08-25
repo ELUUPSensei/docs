@@ -1,0 +1,114 @@
+---
+title: "ELUUP AI API Rate Limits"
+sidebarTitle: "Rate Limits"
+description: "Understand ELUUP AI API rate limits by plan, response headers, and best practices for signals polling and real-time streaming."
+---
+
+ELUUP AI enforces rate limits to ensure fair usage and platform stability. Limits vary by subscription plan and apply to REST API calls. Server-Sent Event (SSE) streams for signals do not count toward your REST rate limit.
+
+## Rate Limits by Plan
+
+| Plan | Requests per Minute | Notes |
+| --- | --- | --- |
+| Free | 60 | Suitable for prototyping and personal dashboards. |
+| Pro | 300 | Built for active traders running multiple agents. |
+| Enterprise | Custom | Contact sales for dedicated throughput and higher concurrency. |
+
+<Note>
+  Upgrading your plan increases the limit immediately. Downgrades take effect at the next billing cycle.
+</Note>
+
+## Rate Limit Headers
+
+Every REST API response includes headers that show your current usage. Inspect these to decide when to back off.
+
+| Header | Description |
+| --- | --- |
+| `X-RateLimit-Limit` | Maximum requests allowed per minute for your plan. |
+| `X-RateLimit-Remaining` | Number of requests remaining in the current window. |
+| `X-RateLimit-Reset` | Unix timestamp when the rate limit window resets. |
+
+### Example Response Headers
+
+```http
+HTTP/1.1 200 OK
+X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 287
+X-RateLimit-Reset: 1722500000
+```
+
+## 429 Rate Limited Response
+
+When you exceed your limit, the API returns 429 with a JSON body and the same headers.
+
+```json
+{
+  "error": {
+    "code": "rate_limited",
+    "message": "You have exceeded the rate limit. Please retry after 42 seconds."
+  }
+}
+```
+
+```http
+HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 300
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1722500042
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Cache Signals Locally" icon="database">
+    Store the latest signal data in your application state instead of polling on every UI refresh.
+  </Card>
+
+  <Card title="Use SSE for Real-Time" icon="broadcast-tower">
+    Subscribe to `GET /signals/stream` for live updates. SSE streams do not count toward REST rate limits.
+  </Card>
+
+  <Card title="Respect Headers" icon="gauge-high">
+    Read `X-RateLimit-Remaining` and pause requests before you hit zero.
+  </Card>
+
+  <Card title="Back Off on 429" icon="clock">
+    Wait until `X-RateLimit-Reset` before retrying, or use exponential backoff with jitter.
+  </Card>
+</CardGroup>
+
+## Polling vs. Streaming Example
+
+<CodeGroup>
+
+```python Python (Polling - counts toward limit)
+import requests, time
+
+while True:
+    resp = requests.get(
+        "https://api.eluup.ai/v1/signals",
+        headers={"Authorization": "Bearer YOUR_API_KEY"}
+    )
+    data = resp.json()
+    print("Remaining:", resp.headers.get("X-RateLimit-Remaining"))
+    time.sleep(5)  # 12 req/min -- safe for Pro
+```
+
+```python Python (SSE - does NOT count toward limit)
+import requests
+
+resp = requests.get(
+    "https://api.eluup.ai/v1/signals/stream",
+    headers={"Authorization": "Bearer YOUR_API_KEY"},
+    stream=True
+)
+for line in resp.iter_lines():
+    if line:
+        print(line.decode("utf-8"))
+```
+
+</CodeGroup>
+
+<Tip>
+  For production trading integrations, use the SSE signal stream to receive buy and sell signals in real time without consuming your REST quota.
+</Tip>

@@ -1,0 +1,43 @@
+---
+title: "What Are ELUUP AI Trading Agents?"
+sidebarTitle: "Trading Agents"
+description: "ELUUP AI trading agents are autonomous programs that monitor proprietary signals and execute buy and sell trades on DEX altcoins without manual input."
+---
+
+ELUUP AI trading agents are autonomous programs that monitor proprietary buy and sell signals and execute trades on decentralized exchanges (DEXs) without requiring you to be online. Once you configure an agent and connect it to a wallet, it independently evaluates signals, enters positions, and manages exits according to the risk rules you set.
+
+## How agents work
+
+Each agent follows a simple lifecycle:
+
+<Steps>
+  <Step title="Idle">
+    The agent is created but not running. You can edit its configuration and connect a wallet.
+  </Step>
+  <Step title="Active">
+    You start the agent. It begins listening for signals and is ready to trade.
+  </Step>
+  <Step title="Trading">
+    When a high-confidence signal matches the agent's filters, the agent submits a swap transaction on-chain and opens a position.
+  </Step>
+  <Step title="Stopped">
+    You stop the agent, or it halts after hitting a configured safety limit. No new trades are opened while stopped.
+  </Step>
+</Steps>
+
+## Wallet connection
+
+Every agent connects to exactly one wallet. The wallet supplies the funds the agent trades with and receives proceeds when positions close. You control which wallet to link, and you can unlink or switch wallets while the agent is idle. One agent per wallet keeps balances and trade history isolated and easy to audit.
+
+## Agent types
+
+ELUUP AI currently supports **signal-following agents**. These agents subscribe to ELUUP's proprietary signal feed, evaluate each signal against their configured filters (chain, token, confidence threshold), and act only when the signal meets every rule. Future agent types may include strategy-composition and custom-script agents.
+
+## What agents do automatically
+
+- Open buy positions when BUY signals exceed the confidence threshold
+- Apply position sizing so no single trade overallocates your wallet
+- Enforce stop loss, trailing stop, and take profit on every trade
+- Close positions and swap back to the base asset when exit conditions trigger
+
+Ready to build your first agent? Follow the guide to [create an agent](/agents/create-agent).

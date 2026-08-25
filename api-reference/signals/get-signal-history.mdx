@@ -1,0 +1,118 @@
+---
+title: "Get Signal History"
+sidebarTitle: "Signal History"
+description: "Query historical AI trading signal data by chain, token, and time range with cursor-based pagination for backtesting and strategy research."
+---
+
+Retrieve past trading signals to research historical performance, backtest strategies, or audit agent decisions. Results are returned in reverse chronological order and support cursor-based pagination.
+
+## Endpoint
+
+```http
+GET /v1/signals/history
+```
+
+## Query parameters
+
+<ParamField query="chain" type="integer" required>
+  Chain ID to filter historical signals. Use `8453` for Base or `56` for BNB Chain.
+</ParamField>
+
+<ParamField query="token_address" type="string">
+  Optional token contract address to scope the history to a single token.
+</ParamField>
+
+<ParamField query="from" type="integer">
+  Start of the time range as a Unix timestamp.
+</ParamField>
+
+<ParamField query="to" type="integer">
+  End of the time range as a Unix timestamp.
+</ParamField>
+
+<ParamField query="limit" default="20" type="integer">
+  Number of signals per page. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Opaque cursor from a previous response to fetch the next page.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/signals/history?chain=8453&token_address=0x532f27101965dd16442E59d40670FaF5eBB142E4&from=1715200000&to=1715799999&limit=5"
+```
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array of historical signal objects.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique signal identifier.
+</ResponseField>
+
+<ResponseField name="data[].token_address" type="string">
+  Token contract address.
+</ResponseField>
+
+<ResponseField name="data[].token_symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="data[].chain_id" type="integer">
+  Chain ID.
+</ResponseField>
+
+<ResponseField name="data[].direction" type="string">
+  Either `BUY` or `SELL`.
+</ResponseField>
+
+<ResponseField name="data[].confidence" type="float">
+  Model confidence from `0.0` to `1.0`.
+</ResponseField>
+
+<ResponseField name="data[].price_usd" type="float">
+  Estimated token price in USD at the time of the signal.
+</ResponseField>
+
+<ResponseField name="data[].timestamp" type="integer">
+  Unix timestamp when the signal was generated.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string">
+  Cursor for the next page, omitted if there are no more results.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "sig_9aBc2DeF8Gh",
+      "token_address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+      "token_symbol": "BRETT",
+      "chain_id": 8453,
+      "direction": "SELL",
+      "confidence": 0.79,
+      "price_usd": 0.0381,
+      "timestamp": 1715601000
+    },
+    {
+      "id": "sig_3xYz1WvQ5Mn",
+      "token_address": "0x532f27101965dd16442E59d40670FaF5eBB142E4",
+      "token_symbol": "BRETT",
+      "chain_id": 8453,
+      "direction": "BUY",
+      "confidence": 0.91,
+      "price_usd": 0.0295,
+      "timestamp": 1715587200
+    }
+  ],
+  "next_cursor": "eyJpZCI6InNpZ18zeFl6MVd2UTVibiIsInRzIjoxNzE1NTg3MjAwfQ"
+}
+```

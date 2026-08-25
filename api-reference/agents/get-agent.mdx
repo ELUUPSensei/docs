@@ -1,0 +1,101 @@
+---
+title: "Get a Trading Agent"
+sidebarTitle: "Get Agent"
+description: "Fetch full configuration, status, and aggregate statistics for a single autonomous trading agent by its ID."
+---
+
+Retrieve detailed information about a specific trading agent, including its current status, risk configuration, and aggregate performance stats such as total trades and win rate.
+
+## Endpoint
+
+```http
+GET /v1/agents/{agent_id}
+```
+
+## Path parameters
+
+<ParamField path="agent_id" type="string" required>
+  Unique identifier of the agent.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/agents/agent_2vL9xQpW"
+```
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique agent identifier.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Agent name.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current status: `active`, `idle`, `paused`, or `error`.
+</ResponseField>
+
+<ResponseField name="chain_id" type="integer">
+  Chain the agent trades on.
+</ResponseField>
+
+<ResponseField name="wallet_id" type="string">
+  Connected wallet ID.
+</ResponseField>
+
+<ResponseField name="risk" type="object">
+  Risk configuration with `position_size_pct`, `stop_loss_pct`, `trailing_stop_pct`, `take_profit_pct`.
+</ResponseField>
+
+<ResponseField name="min_confidence" type="float">
+  Minimum signal confidence threshold.
+</ResponseField>
+
+<ResponseField name="max_positions" type="integer">
+  Maximum concurrent open positions.
+</ResponseField>
+
+<ResponseField name="stats" type="object">
+  - `total_trades` (integer): Number of completed trades.
+  - `win_rate_pct` (float): Percentage of winning trades.
+  - `total_pnl_usd` (float): Total realized profit and loss in USD.
+</ResponseField>
+
+<ResponseField name="created_at" type="integer">
+  Unix timestamp of creation.
+</ResponseField>
+
+<ResponseField name="updated_at" type="integer">
+  Unix timestamp of the last configuration change.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "agent_2vL9xQpW",
+  "name": "Base Alpha Bot",
+  "status": "active",
+  "chain_id": 8453,
+  "wallet_id": "wallet_1aB3cD5e",
+  "risk": {
+    "position_size_pct": 5.0,
+    "stop_loss_pct": 8.0,
+    "trailing_stop_pct": 10.0,
+    "take_profit_pct": 25.0
+  },
+  "min_confidence": 0.80,
+  "max_positions": 5,
+  "stats": {
+    "total_trades": 42,
+    "win_rate_pct": 78.5,
+    "total_pnl_usd": 1250.45
+  },
+  "created_at": 1715603200,
+  "updated_at": 1716200000
+}
+```

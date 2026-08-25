@@ -1,0 +1,56 @@
+---
+title: "Get Account Usage"
+sidebarTitle: "Get Usage"
+description: "Monitor your current API usage against plan limits, including request counts, agent limits, and billing period reset times."
+---
+
+Track your current API consumption relative to plan limits. Use this endpoint to monitor request volume, agent count, and billing period resets so you can plan capacity before hitting limits.
+
+## Endpoint
+
+```http
+GET /v1/account/usage
+```
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/account/usage"
+```
+
+## Response
+
+<ResponseField name="requests" type="object">
+  Current request usage for the billing period.
+
+  - `used` (integer): Requests made so far.
+  - `limit` (integer): Maximum requests allowed in the period.
+</ResponseField>
+
+<ResponseField name="agents" type="object">
+  Current agent usage for the billing period.
+
+  - `used` (integer): Number of agents created.
+  - `limit` (integer): Maximum agents allowed.
+</ResponseField>
+
+<ResponseField name="reset_at" type="integer">
+  Unix timestamp when the current usage period resets.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "requests": {
+    "used": 12500,
+    "limit": 50000
+  },
+  "agents": {
+    "used": 3,
+    "limit": 10
+  },
+  "reset_at": 1718582400
+}
+```

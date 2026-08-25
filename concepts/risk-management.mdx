@@ -1,0 +1,41 @@
+---
+title: "Automated Risk Management in ELUUP AI"
+sidebarTitle: "Risk Management"
+description: "Every ELUUP AI agent enforces position sizing, stop loss, trailing stops, and take profit on every trade automatically. Learn how to configure these rules."
+---
+
+Every trade opened by an ELUUP AI agent is protected by automated risk controls. You define the rules once per agent, and the system enforces them on every position without manual intervention. This ensures consistent downside protection and disciplined profit taking, even when you are not monitoring the market.
+
+## Risk controls explained
+
+<Steps>
+  <Step title="Position sizing">
+    The agent allocates only a defined percentage of the connected wallet balance to each trade. This prevents any single signal from overconcentrating your capital.
+  </Step>
+  <Step title="Stop loss">
+    If the trade moves against you by the configured percentage, the agent exits the position immediately and returns the remaining value to the wallet base asset.
+  </Step>
+  <Step title="Trailing stop">
+    After the trade moves in your favor, the trailing stop locks in gains by following the price upward. If the price drops from its peak by the trailing distance, the agent exits.
+  </Step>
+  <Step title="Take profit">
+    When the trade reaches the configured profit percentage, the agent closes the position and realizes the gain.
+  </Step>
+</Steps>
+
+## Configuration fields
+
+These values are set in the agent configuration and applied to every trade the agent opens.
+
+| Field | Description | Default | Valid Range |
+| --- | --- | --- | --- |
+| `position_size_pct` | Percentage of wallet balance used per trade | `10` | `1` to `100` |
+| `stop_loss_pct` | Maximum loss before automatic exit | `5` | `1` to `50` |
+| `trailing_stop_pct` | Price drop from peak that triggers exit | `3` | `0.5` to `20` |
+| `take_profit_pct` | Profit target that triggers automatic exit | `15` | `1` to `100` |
+
+<Tip>
+  Start conservative. A smaller `position_size_pct` and a tighter `stop_loss_pct` limit drawdowns while you evaluate agent performance in live markets.
+</Tip>
+
+All risk parameters are validated when you create or update an agent. Invalid combinations are rejected before the agent is allowed to start. To adjust these values for an existing agent, see the [configure agent](/agents/configure) guide.

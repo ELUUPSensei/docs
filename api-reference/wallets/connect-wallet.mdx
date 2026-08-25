@@ -1,0 +1,83 @@
+---
+title: "Connect a Wallet"
+sidebarTitle: "Connect Wallet"
+description: "Connect and verify a wallet by submitting its address, chain, label, and an ownership signature so it can fund trades for your agents."
+---
+
+Connect a wallet to your ELUUP AI account so it can be assigned to trading agents. You must provide a signed message proving ownership of the address before the wallet can be used.
+
+## Endpoint
+
+```http
+POST /v1/wallets
+```
+
+## Body parameters
+
+<ParamField body="address" type="string" required>
+  On-chain wallet address.
+</ParamField>
+
+<ParamField body="chain_id" type="integer" required>
+  Chain the wallet belongs to. Use `8453` for Base or `56` for BNB Chain.
+</ParamField>
+
+<ParamField body="label" type="string" required>
+  Human-readable label to identify the wallet (for example, "Base Main Wallet").
+</ParamField>
+
+<ParamField body="signature" type="string" required>
+  Signature of a verification message signed by the wallet's private key to prove ownership.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.eluup.ai/v1/wallets" \
+  -H "Authorization: Bearer $ELUUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "address": "0xA1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0",
+    "chain_id": 8453,
+    "label": "Base Trading Wallet",
+    "signature": "0x1234567890abcdef..."
+  }'
+```
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique wallet identifier.
+</ResponseField>
+
+<ResponseField name="address" type="string">
+  Wallet address.
+</ResponseField>
+
+<ResponseField name="chain_id" type="integer">
+  Chain ID.
+</ResponseField>
+
+<ResponseField name="label" type="string">
+  Wallet label.
+</ResponseField>
+
+<ResponseField name="created_at" type="integer">
+  Unix timestamp when the wallet was connected.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "wallet_1aB3cD5e",
+  "address": "0xA1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0",
+  "chain_id": 8453,
+  "label": "Base Trading Wallet",
+  "created_at": 1715500000
+}
+```
+
+<Warning>
+  If the signature is invalid or does not match the provided address, the API returns `400 Bad Request` with code `invalid_signature`.
+</Warning>

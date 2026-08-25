@@ -1,0 +1,94 @@
+---
+title: "Update a Trading Agent"
+sidebarTitle: "Update Agent"
+description: "Modify an existing agent's name, risk rules, confidence threshold, or position limits without recreating it."
+---
+
+Update one or more fields on an existing trading agent. Only the fields you include in the request body are changed. This is useful for tuning risk parameters or renaming an agent without stopping it first.
+
+## Endpoint
+
+```http
+PATCH /v1/agents/{agent_id}
+```
+
+## Path parameters
+
+<ParamField path="agent_id" type="string" required>
+  Unique identifier of the agent to update.
+</ParamField>
+
+## Body parameters
+
+All body fields are optional. Only provided fields are updated.
+
+<ParamField body="name" type="string">
+  New human-readable name for the agent.
+</ParamField>
+
+<ParamField body="wallet_id" type="string">
+  New wallet ID to bind trades to.
+</ParamField>
+
+<ParamField body="risk" type="object">
+  Risk configuration object. You can update individual nested fields using dot notation in some clients, or pass the full object:
+
+  - `position_size_pct` (number)
+  - `stop_loss_pct` (number)
+  - `trailing_stop_pct` (number)
+  - `take_profit_pct` (number)
+</ParamField>
+
+<ParamField body="min_confidence" type="float">
+  New minimum signal confidence from `0.0` to `1.0`.
+</ParamField>
+
+<ParamField body="max_positions" type="integer">
+  New maximum concurrent open positions.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X PATCH "https://api.eluup.ai/v1/agents/agent_2vL9xQpW" \
+  -H "Authorization: Bearer $ELUUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "risk": {
+      "stop_loss_pct": 6.0,
+      "take_profit_pct": 30.0
+    },
+    "min_confidence": 0.85
+  }'
+```
+
+## Response
+
+Returns the updated agent object with the same fields as a full [Get Agent](/api-reference/agents/get-agent) response.
+
+### Example response
+
+```json
+{
+  "id": "agent_2vL9xQpW",
+  "name": "Base Alpha Bot",
+  "status": "active",
+  "chain_id": 8453,
+  "wallet_id": "wallet_1aB3cD5e",
+  "risk": {
+    "position_size_pct": 5.0,
+    "stop_loss_pct": 6.0,
+    "trailing_stop_pct": 10.0,
+    "take_profit_pct": 30.0
+  },
+  "min_confidence": 0.85,
+  "max_positions": 5,
+  "stats": {
+    "total_trades": 42,
+    "win_rate_pct": 78.5,
+    "total_pnl_usd": 1250.45
+  },
+  "created_at": 1715603200,
+  "updated_at": 1716300000
+}
+```

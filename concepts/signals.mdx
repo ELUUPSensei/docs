@@ -1,0 +1,60 @@
+---
+title: "Trading Signals: How ELUUP AI Generates Alpha"
+sidebarTitle: "Signals"
+description: "ELUUP AI generates proprietary buy and sell signals for DEX tokens. Learn what signals contain, how freshness works, and how to consume them via API or SSE."
+---
+
+ELUUP AI generates proprietary buy and sell signals for DEX tokens by analyzing on-chain activity, liquidity patterns, and market metadata. These signals tell agents and developers when a token may be entering or exiting a favorable trading window.
+
+## What a signal contains
+
+Every signal is a structured object with the following fields:
+
+<ResponseField name="token_address" type="string" required>
+  The contract address of the DEX token on the target chain.
+</ResponseField>
+
+<ResponseField name="chain_id" type="integer" required>
+  The chain where the token trades. For example, `8453` for Base.
+</ResponseField>
+
+<ResponseField name="direction" type="string" required>
+  Either `BUY` or `SELL`.
+</ResponseField>
+
+<ResponseField name="confidence" type="number" required>
+  A score from `0.0` to `1.0` representing signal strength.
+</ResponseField>
+
+<ResponseField name="timestamp" type="string" required>
+  ISO 8601 timestamp when the signal was generated.
+</ResponseField>
+
+## Signal freshness
+
+Signals are time-sensitive. A high-confidence `BUY` signal can expire within minutes if market conditions shift. ELUUP AI agents evaluate signal age automatically and skip stale signals. When consuming signals programmatically, treat older timestamps as lower priority or discard them based on your own freshness rules.
+
+## Sample signal
+
+```json
+{
+  "token_address": "0x4200000000000000000000000000000000000042",
+  "chain_id": 8453,
+  "direction": "BUY",
+  "confidence": 0.91,
+  "timestamp": "2025-06-10T14:32:01Z"
+}
+```
+
+## Consuming signals
+
+You can consume signals in two ways:
+
+| Method | Best for | Endpoint |
+| --- | --- | --- |
+| REST polling | Batch scripts and dashboards | `GET /signals` |
+| SSE stream | Real-time agent and bot integrations | `GET /signals/stream` |
+
+ELUUP AI agents consume the SSE stream internally and act immediately when a signal matches their filters. Developers building custom bots can subscribe to the same stream to replicate that behavior.
+
+For implementation details, see the [Get Signals](/api-reference/signals/get-signals) reference.

@@ -1,0 +1,124 @@
+---
+title: "Create a Trading Agent"
+sidebarTitle: "Create Agent"
+description: "Create a new autonomous AI trading agent on Base or BNB Chain, with configurable risk rules, confidence thresholds, and wallet binding."
+---
+
+Create a new autonomous trading agent backed by ELUUP AI signals. Define the agent's chain, connected wallet, risk parameters, and operational constraints at creation time.
+
+## Endpoint
+
+```http
+POST /v1/agents
+```
+
+## Body parameters
+
+<ParamField body="name" type="string" required>
+  Human-readable name for the agent.
+</ParamField>
+
+<ParamField body="wallet_id" type="string" required>
+  ID of the wallet that will fund trades and receive proceeds. The wallet must already be connected.
+</ParamField>
+
+<ParamField body="chain_id" type="integer" required>
+  Chain the agent will trade on. Use `8453` for Base or `56` for BNB Chain.
+</ParamField>
+
+<ParamField body="risk" type="object">
+  Risk management configuration.
+
+  - `position_size_pct` (number): Percentage of available balance to allocate per position (for example, `5.0`).
+  - `stop_loss_pct` (number): Stop loss percentage below entry price (for example, `8.0`).
+  - `trailing_stop_pct` (number): Trailing stop percentage (for example, `10.0`).
+  - `take_profit_pct` (number): Take profit percentage above entry price (for example, `25.0`).
+</ParamField>
+
+<ParamField body="min_confidence" type="float">
+  Minimum signal confidence from `0.0` to `1.0` required before the agent acts. Default is `0.75`.
+</ParamField>
+
+<ParamField body="max_positions" type="integer">
+  Maximum number of concurrent open positions the agent may hold. Default is `5`.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.eluup.ai/v1/agents" \
+  -H "Authorization: Bearer $ELUUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Base Alpha Bot",
+    "wallet_id": "wallet_1aB3cD5e",
+    "chain_id": 8453,
+    "risk": {
+      "position_size_pct": 5.0,
+      "stop_loss_pct": 8.0,
+      "trailing_stop_pct": 10.0,
+      "take_profit_pct": 25.0
+    },
+    "min_confidence": 0.80,
+    "max_positions": 5
+  }'
+```
+
+## Response
+
+<ResponseField name="id" type="string">
+  Unique agent identifier.
+</ResponseField>
+
+<ResponseField name="name" type="string">
+  Agent name.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Initial status after creation: `idle`.
+</ResponseField>
+
+<ResponseField name="chain_id" type="integer">
+  Chain the agent trades on.
+</ResponseField>
+
+<ResponseField name="wallet_id" type="string">
+  Connected wallet ID.
+</ResponseField>
+
+<ResponseField name="risk" type="object">
+  Risk configuration object with `position_size_pct`, `stop_loss_pct`, `trailing_stop_pct`, `take_profit_pct`.
+</ResponseField>
+
+<ResponseField name="min_confidence" type="float">
+  Minimum confidence threshold.
+</ResponseField>
+
+<ResponseField name="max_positions" type="integer">
+  Maximum concurrent open positions.
+</ResponseField>
+
+<ResponseField name="created_at" type="integer">
+  Unix timestamp of creation.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "agent_2vL9xQpW",
+  "name": "Base Alpha Bot",
+  "status": "idle",
+  "chain_id": 8453,
+  "wallet_id": "wallet_1aB3cD5e",
+  "risk": {
+    "position_size_pct": 5.0,
+    "stop_loss_pct": 8.0,
+    "trailing_stop_pct": 10.0,
+    "take_profit_pct": 25.0
+  },
+  "min_confidence": 0.80,
+  "max_positions": 5,
+  "created_at": 1715603200
+}
+```

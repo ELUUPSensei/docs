@@ -1,0 +1,98 @@
+---
+title: "ELUUP AI REST API Reference"
+sidebarTitle: "Overview"
+description: "Overview of the ELUUP AI REST API: base URL, Bearer auth, cursor pagination, rate limits, and error formats for traders and developers building with autonomous DEX AI agents."
+---
+
+The ELUUP AI REST API lets you integrate autonomous DEX trading agents, real-time buy/sell signals, trade tracking, and wallet management into your applications. This reference covers standalone endpoints with no SDK required. All examples use the v1 API and real-world Base-chain data.
+
+## Base URL
+
+```text
+https://api.eluup.ai/v1
+```
+
+## Authentication
+
+Every request must include an API key in the `Authorization` header as a Bearer token:
+
+```text
+Authorization: Bearer <API_KEY>
+```
+
+If the key is missing, expired, or invalid, the API returns `401 Unauthorized`. For details on obtaining and rotating your API key, see the [Authentication](/authentication) guide.
+
+## Versioning
+
+All endpoints are prefixed with `/v1`. Breaking changes will be announced in advance and introduced under a new version prefix, such as `/v2`. The current version is `v1`.
+
+## Content type
+
+Requests with a body should set:
+
+```text
+Content-Type: application/json
+```
+
+Responses are always returned as `application/json`, with the exception of Server-Sent Events (SSE) streams.
+
+## Pagination
+
+List endpoints use cursor-based pagination. Pass these query parameters:
+
+- `limit`: Number of items per page. Default is `20`, maximum is `100`.
+- `cursor`: Opaque cursor string returned in the previous response.
+
+Paginated responses include:
+
+- `data`: Array of result items.
+- `next_cursor`: Cursor to fetch the next page. Omitted when there are no more results.
+
+Example request pattern:
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/trades?limit=20&cursor=abc123"
+```
+
+Example paginated response:
+
+```json
+{
+  "data": [...],
+  "next_cursor": "def456"
+}
+```
+
+## Rate limits
+
+The API enforces rate limits per API key. When exceeded, you will receive a `429 Too Many Requests` response with a `Retry-After` header. For exact limits and status code details, see the [Rate Limits](/reference/rate-limits) and [Errors](/reference/errors) references.
+
+## Errors
+
+Errors follow a consistent JSON format. See the [Errors reference](/reference/errors) for a full list of status codes, error codes, and how to handle retries.
+
+## Minimal example
+
+Make your first authenticated call to list your trading agents:
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/agents"
+```
+
+A successful response returns a JSON array of agent summaries:
+
+```json
+{
+  "data": [
+    {
+      "id": "agent_2vL9xQpW",
+      "name": "Base Alpha Bot",
+      "status": "active",
+      "chain_id": 8453,
+      "created_at": 1715603200
+    }
+  ]
+}
+```

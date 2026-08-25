@@ -1,0 +1,131 @@
+---
+title: "Monitor Agent Performance and Trade History"
+sidebarTitle: "Monitor"
+description: "Track agent status, trade history, open positions, and performance metrics with the ELUUP AI monitoring endpoints."
+---
+
+Once an agent is active, you can monitor its current state, review every trade it has executed, and inspect open positions at any time. This page covers the three primary monitoring endpoints and the performance metrics returned by the agent status resource.
+
+## Agent Status
+
+Call [GET /agents/](/api-reference/agents/get-agent){id} to retrieve the full agent object, including its current state and high-level performance numbers.
+
+```bash
+curl https://api.eluup.ai/v1/agents/agent_7xK3mNpQvL9wYzB2 \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+The response includes summary metrics updated as trades settle:
+
+<ResponseField name="total_trades" type="integer">
+  Total number of completed trades since the agent was created.
+</ResponseField>
+
+<ResponseField name="win_rate" type="number">
+  Fraction of trades that closed at a profit. Range: 0.00 to 1.00.
+</ResponseField>
+
+<ResponseField name="total_pnl_usd" type="number">
+  Cumulative realized profit and loss across all completed trades, in USD.
+</ResponseField>
+
+<ResponseField name="total_roi_pct" type="number">
+  Total return on investment, expressed as a fraction of cumulative capital deployed.
+</ResponseField>
+
+<ResponseField name="avg_trade_duration_mins" type="number">
+  Average duration from entry to exit across all completed trades, in minutes.
+</ResponseField>
+
+Example metrics in an agent response:
+
+```json
+{
+  "id": "agent_7xK3mNpQvL9wYzB2",
+  "name": "Base Alpha Agent",
+  "state": "active",
+  "open_positions_count": 2,
+  "total_trades": 42,
+  "win_rate": 0.81,
+  "total_pnl_usd": 3847.20,
+  "total_roi_pct": 0.34,
+  "avg_trade_duration_mins": 127,
+  "last_signal_at": "2024-06-15T16:42:00Z",
+  "created_at": "2024-06-15T09:23:00Z",
+  "updated_at": "2024-06-15T16:42:00Z"
+}
+```
+
+## Trade History
+
+To inspect every trade the agent has made, query [GET /trades](/api-reference/trades/list-trades) with the `agent_id` filter:
+
+```bash
+curl "https://api.eluup.ai/v1/trades?agent_id=agent_7xK3mNpQvL9wYzB2&limit=20" \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+Each trade record includes the token, entry and exit prices, PnL, and the trigger that caused the exit (stop loss, take profit, trailing stop, or signal).
+
+## Open Positions
+
+Get a snapshot of positions that are still live by filtering [GET /positions](/api-reference/trades/get-positions) with `agent_id`:
+
+```bash
+curl "https://api.eluup.ai/v1/positions?agent_id=agent_7xK3mNpQvL9wYzB2" \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+The response includes the current unrealized PnL for each position, the entry price, and the active risk levels (stop loss, trailing stop, take profit) so you can see exactly where each trade stands.
+
+## Sample Trade Record
+
+```json
+{
+  "id": "trade_9aB4cDe5FgH6iJk7",
+  "agent_id": "agent_7xK3mNpQvL9wYzB2",
+  "token_address": "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+  "token_symbol": "DEGEN",
+  "chain_id": 8453,
+  "entry_price_usd": 0.01240,
+  "exit_price_usd": 0.01488,
+  "position_size_usd": 500.00,
+  "pnl_usd": 100.00,
+  "roi_pct": 0.20,
+  "exit_reason": "take_profit",
+  "duration_mins": 89,
+  "created_at": "2024-06-15T10:15:00Z",
+  "closed_at": "2024-06-15T11:44:00Z"
+}
+```
+
+## Close a Position Manually
+
+If you need to exit a position before the agent's risk controls trigger, call [POST /positions/](/api-reference/trades/close-position){id}[/close](/api-reference/trades/close-position):
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://api.eluup.ai/v1/positions/pos_3xM8nPqRvK5wYzA1/close \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+```typescript TypeScript
+await fetch("https://api.eluup.ai/v1/positions/pos_3xM8nPqRvK5wYzA1/close", {
+  method: "POST",
+  headers: { Authorization: `Bearer ${process.env.ELUUP_API_KEY}` },
+});
+```
+
+```python Python
+requests.post(
+    "https://api.eluup.ai/v1/positions/pos_3xM8nPqRvK5wYzA1/close",
+    headers={"Authorization": f"Bearer {os.environ['ELUUP_API_KEY']}"},
+)
+```
+
+</CodeGroup>
+
+<Tip>
+  Every trade executed by an ELUUP AI agent is recorded on chain. You can verify agent activity and inspect trade receipts using the on-chain Proof of Trades feature on [eluup.ai](https://eluup.ai).
+</Tip>

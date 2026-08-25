@@ -1,0 +1,59 @@
+---
+title: "Stop a Trading Agent"
+sidebarTitle: "Stop Agent"
+description: "Deactivate a running trading agent to halt new trades. Open positions are not closed automatically."
+---
+
+Stop an active trading agent to prevent it from opening new positions. Existing open positions remain active and will continue to be managed by stop loss, trailing stop, and take profit rules until they close or you close them manually.
+
+## Endpoint
+
+```http
+POST /v1/agents/{agent_id}/stop
+```
+
+## Path parameters
+
+<ParamField path="agent_id" type="string" required>
+  Unique identifier of the agent to stop.
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.eluup.ai/v1/agents/agent_2vL9xQpW/stop" \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+## Response
+
+Returns the agent object with its updated `status` set to `idle`.
+
+<ResponseField name="id" type="string">
+  Unique agent identifier.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  `idle` when the agent has stopped successfully.
+</ResponseField>
+
+<ResponseField name="stopped_at" type="integer">
+  Unix timestamp when the agent transitioned to idle.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "agent_2vL9xQpW",
+  "name": "Base Alpha Bot",
+  "status": "idle",
+  "chain_id": 8453,
+  "wallet_id": "wallet_1aB3cD5e",
+  "stopped_at": 1716500000
+}
+```
+
+<Warning>
+  If the agent is already `idle`, the API returns `409 Conflict`.
+</Warning>

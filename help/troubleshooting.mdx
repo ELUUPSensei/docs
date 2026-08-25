@@ -1,0 +1,85 @@
+---
+title: "Troubleshoot Common ELUUP AI Issues"
+sidebarTitle: "Troubleshooting"
+description: "Fix common ELUUP AI issues including login problems, slow AI results, integration errors, automation triggers, and unexpected model output."
+---
+
+If something is not working as expected in ELUUP AI, check the symptoms below for the most likely cause and steps to resolve it.
+
+<AccordionGroup>
+  <Accordion title="I cannot log in">
+    **Likely cause**: incorrect password, unverified email, or browser issue.
+
+    **Resolution**:
+
+    1. Make sure Caps Lock is off and you are typing the correct password.
+    2. If you forgot your password, click **Forgot password** on the sign-in page and follow the reset email.
+    3. Check that you verified your email address after signing up.
+    4. Clear your browser cache and cookies, then try again in an incognito window.
+    5. If you use a password manager, confirm it filled the correct credentials.
+  </Accordion>
+
+  <Accordion title="AI task results are slow">
+    **Likely cause**: large input size, high platform load, or a complex model.
+
+    **Resolution**:
+
+    1. Reduce the size of the input file or split it into smaller batches.
+    2. Check the [status page](https://status.eluup.ai) for any reported slowdowns.
+    3. Switch to a lighter AI model if your task does not require the most advanced option.
+    4. If you are on the Free plan, consider upgrading to Pro or Business for higher priority processing.
+  </Accordion>
+
+  <Accordion title="Integration shows a connection error">
+    **Likely cause**: expired credentials, changed permissions, or a network restriction.
+
+    **Resolution**:
+
+    1. Open the integration in ELUUP AI and click **Reconnect**.
+    2. Re-authenticate with the third-party service and grant all requested permissions.
+    3. Verify that your account on the third-party service is active and has not been restricted.
+    4. Check whether your organization uses IP allowlists and add ELUUP AI if needed.
+  </Accordion>
+
+  <Accordion title="Automation is not triggering">
+    **Likely cause**: automation is disabled, trigger conditions are not met, or a task limit was reached.
+
+    **Resolution**:
+
+    1. Open the automation and confirm it is **enabled**.
+    2. Review the trigger settings (schedule, event, or webhook) and test the condition manually if possible.
+    3. Check **Settings** \> **Billing** to see if you have reached your monthly AI task or active automation limit.
+    4. Review recent automation run logs for error messages and fix the reported issue.
+  </Accordion>
+
+  <Accordion title="Model output is unexpected or incorrect">
+    **Likely cause**: unclear instructions, low-quality input data, or a model mismatch.
+
+    **Resolution**:
+
+    1. Rewrite your prompt to be more specific. Include examples of the desired output format.
+    2. Clean the input data: remove irrelevant rows, fix formatting issues, and ensure consistent structure.
+    3. Try a different AI model that is better suited to your task type.
+    4. Run a small test sample first to tune the prompt before processing the full dataset.
+  </Accordion>
+</AccordionGroup>
+
+## Still need help?
+
+If the steps above did not fix your issue, contact our support team.
+
+<CardGroup cols={2}>
+  <Card title="Email support" icon="envelope" href="mailto:support@eluup.ai">
+    Reach us at [support@eluup.ai](mailto:support@eluup.ai). Pro and Business customers receive priority responses.
+  </Card>
+
+  <Card title="Status page" icon="signal" href="https://status.eluup.ai">
+    Check current platform status and any active incidents.
+  </Card>
+</CardGroup>
+
+## Related articles
+
+- [FAQ](/help/faq)
+- [Account & Team](/account/team)
+- [Plans & Billing](/account/billing)

@@ -1,0 +1,94 @@
+---
+title: "List AI Trading Agents"
+sidebarTitle: "List Agents"
+description: "List all your autonomous trading agents with optional status filtering. Retrieve agent IDs, names, chains, and current run states."
+---
+
+Retrieve a list of your trading agents. Use this endpoint to monitor which agents are active and filter by run status when building dashboards or management tools.
+
+## Endpoint
+
+```http
+GET /v1/agents
+```
+
+## Query parameters
+
+<ParamField query="status" type="string">
+  Filter by agent status. Supported values: `active`, `idle`, `paused`, `error`.
+</ParamField>
+
+<ParamField query="limit" default="20" type="integer">
+  Number of agents per page. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Opaque cursor from a previous response to fetch the next page.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/agents?status=active&limit=10"
+```
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array of agent summary objects.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique agent identifier.
+</ResponseField>
+
+<ResponseField name="data[].name" type="string">
+  Human-readable agent name.
+</ResponseField>
+
+<ResponseField name="data[].status" type="string">
+  Current status: `active`, `idle`, `paused`, or `error`.
+</ResponseField>
+
+<ResponseField name="data[].chain_id" type="integer">
+  Chain the agent trades on.
+</ResponseField>
+
+<ResponseField name="data[].wallet_id" type="string">
+  ID of the connected wallet.
+</ResponseField>
+
+<ResponseField name="data[].created_at" type="integer">
+  Unix timestamp when the agent was created.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string">
+  Cursor for the next page, omitted when there are no more results.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "agent_2vL9xQpW",
+      "name": "Base Alpha Bot",
+      "status": "active",
+      "chain_id": 8453,
+      "wallet_id": "wallet_1aB3cD5e",
+      "created_at": 1715603200
+    },
+    {
+      "id": "agent_8kM4nR0t",
+      "name": "BNB Momentum Scalper",
+      "status": "idle",
+      "chain_id": 56,
+      "wallet_id": "wallet_7gH9iJ2k",
+      "created_at": 1715500000
+    }
+  ],
+  "next_cursor": "eyJpZCI6ImFnZW50XzhrTTRuUjB0IiwidHMiOjE3MTU1MDAwMDB9"
+}
+```

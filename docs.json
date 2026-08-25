@@ -1,0 +1,165 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "luma",
+  "name": "ELUUP AI",
+  "colors": {
+    "primary": "#00FFAA",
+    "light": "#00FFAA",
+    "dark": "#00FFAA"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "pages": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "index",
+          "quickstart"
+        ]
+      }
+    ],
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "index",
+              "quickstart",
+              "authentication"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "icon": "lightbulb",
+            "pages": [
+              "concepts/trading-agents",
+              "concepts/signals",
+              "concepts/chains",
+              "concepts/risk-management"
+            ]
+          },
+          {
+            "group": "Agents",
+            "icon": "robot",
+            "pages": [
+              "agents/overview",
+              "agents/create-agent",
+              "agents/configure",
+              "agents/monitor"
+            ]
+          },
+          {
+            "group": "CLI",
+            "icon": "terminal",
+            "pages": [
+              "cli/overview",
+              "cli/installation",
+              "cli/commands"
+            ]
+          },
+          {
+            "group": "MCP Server",
+            "icon": "plug",
+            "pages": [
+              "mcp/overview",
+              "mcp/setup"
+            ]
+          },
+          {
+            "group": "Reference",
+            "icon": "book",
+            "pages": [
+              "reference/errors",
+              "reference/rate-limits",
+              "reference/chains-reference",
+              "reference/changelog"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api-reference/introduction"
+            ]
+          },
+          {
+            "group": "Signals",
+            "pages": [
+              "api-reference/signals/get-signals",
+              "api-reference/signals/get-signal-history",
+              "api-reference/signals/stream-signals"
+            ]
+          },
+          {
+            "group": "Agents",
+            "pages": [
+              "api-reference/agents/list-agents",
+              "api-reference/agents/create-agent",
+              "api-reference/agents/get-agent",
+              "api-reference/agents/update-agent",
+              "api-reference/agents/delete-agent",
+              "api-reference/agents/start-agent",
+              "api-reference/agents/stop-agent"
+            ]
+          },
+          {
+            "group": "Trades",
+            "pages": [
+              "api-reference/trades/list-trades",
+              "api-reference/trades/get-trade",
+              "api-reference/trades/get-positions",
+              "api-reference/trades/close-position"
+            ]
+          },
+          {
+            "group": "Wallets",
+            "pages": [
+              "api-reference/wallets/list-wallets",
+              "api-reference/wallets/connect-wallet",
+              "api-reference/wallets/get-balance"
+            ]
+          },
+          {
+            "group": "Account",
+            "pages": [
+              "api-reference/account/get-account",
+              "api-reference/account/get-usage"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "href": "https://eluup.ai",
+        "label": "eluup.ai"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get API Key",
+      "href": "https://app.eluup.ai"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/eluupai"
+    }
+  },
+  "appearance": {
+    "default": "dark"
+  }
+}

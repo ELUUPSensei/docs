@@ -1,0 +1,88 @@
+---
+title: "List Connected Wallets"
+sidebarTitle: "List Wallets"
+description: "List all wallets connected to your account, including addresses, chain IDs, and labels for each wallet."
+---
+
+Retrieve the wallets you have connected and verified for trading on Base and BNB Chain. Each wallet must be proven with a signed message before it can be used by an agent.
+
+## Endpoint
+
+```http
+GET /v1/wallets
+```
+
+## Query parameters
+
+<ParamField query="chain_id" type="integer">
+  Filter wallets by chain. Use `8453` for Base or `56` for BNB Chain.
+</ParamField>
+
+<ParamField query="limit" default="20" type="integer">
+  Number of wallets per page. Maximum is `100`.
+</ParamField>
+
+<ParamField query="cursor" type="string">
+  Opaque cursor from a previous response to fetch the next page.
+</ParamField>
+
+## Example request
+
+```bash
+curl -H "Authorization: Bearer $ELUUP_API_KEY" \
+  "https://api.eluup.ai/v1/wallets?limit=10"
+```
+
+## Response
+
+<ResponseField name="data" type="array">
+  Array of wallet objects.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique wallet identifier.
+</ResponseField>
+
+<ResponseField name="data[].address" type="string">
+  On-chain wallet address.
+</ResponseField>
+
+<ResponseField name="data[].chain_id" type="integer">
+  Chain the wallet belongs to.
+</ResponseField>
+
+<ResponseField name="data[].label" type="string">
+  Optional user-provided label.
+</ResponseField>
+
+<ResponseField name="data[].created_at" type="integer">
+  Unix timestamp when the wallet was connected.
+</ResponseField>
+
+<ResponseField name="next_cursor" type="string">
+  Cursor for the next page, omitted when there are no more results.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "data": [
+    {
+      "id": "wallet_1aB3cD5e",
+      "address": "0xA1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0",
+      "chain_id": 8453,
+      "label": "Base Trading Wallet",
+      "created_at": 1715500000
+    },
+    {
+      "id": "wallet_7gH9iJ2k",
+      "address": "0xB2C3D4E5F6A7B8C9D0E1F2A3B4C5D6E7F8A9B0C1",
+      "chain_id": 56,
+      "label": "BNB Trading Wallet",
+      "created_at": 1715400000
+    }
+  ],
+  "next_cursor": "eyJpZCI6IndhbGxldF83Z0g5aUoyayIsInRzIjoxNzE1NDAwMDAwfQ"
+}
+```

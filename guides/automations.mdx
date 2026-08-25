@@ -1,0 +1,97 @@
+---
+title: "Automate AI Tasks with ELUUP AI"
+sidebarTitle: "Automations"
+description: "Learn how to create, schedule, and monitor automated AI tasks in ELUUP AI using triggers, schedules, and notification channels."
+---
+
+An automation in ELUUP AI runs an AI task on a schedule or in response to an external event. Instead of logging in and pressing Run every time, you configure the trigger once and let ELUUP AI handle execution, error handling, and notifications for you.
+
+## What you can automate
+
+- Schedule a task to run daily, weekly, or at a custom interval
+- Trigger a task via a webhook when something happens in another tool
+- Send results to Slack, email, or a connected storage folder after each run
+
+## Create an automation
+
+<Steps>
+  <Step title="Open the Automations page">
+    From the ELUUP AI dashboard, click **Automations** in the left sidebar, then click **New Automation**.
+  </Step>
+  <Step title="Choose a trigger type">
+    Select how the automation starts:
+
+    - **Schedule**: pick a start time and recurrence (hourly, daily, weekly, or custom cron expression)
+    - **Webhook**: ELUUP AI generates a unique URL. Send a POST request to that URL from any external tool to trigger the run
+  </Step>
+  <Step title="Link an AI task">
+    Choose the project and the saved AI task you want to run. You can only link tasks that already exist. If you need help creating one, see [First Project](/guides/first-project).
+  </Step>
+  <Step title="Set input source options">
+    For scheduled automations, tell ELUUP AI how to handle data each run:
+
+    - **Use latest file**: always process the most recently uploaded file in the project's Data tab
+    - **Fixed source**: always process the same file or URL
+    - **Append results**: add new output to previous results, or overwrite them
+  </Step>
+  <Step title="Add a notification channel">
+    Choose where to send run updates:
+
+    - **Slack channel**: pick a connected channel (requires the Slack integration)
+    - **Email**: enter one or more addresses
+    - **None**: run silently; you must check the dashboard for status
+  </Step>
+  <Step title="Name and save">
+    Give the automation a descriptive name, such as "Daily Sales Report Summary". Toggle the **Enabled** switch on, then click **Save**.
+  </Step>
+</Steps>
+
+<Warning>
+  Automations are subject to rate limits based on your plan. Exceeding the limit pauses automations until the next billing cycle. Check your current usage on the **Account \> Billing** page.
+</Warning>
+
+## Monitor run history
+
+<Steps>
+  <Step title="Open the automation details">
+    From the Automations list, click the name of the automation you want to review.
+  </Step>
+  <Step title="Review recent runs">
+    The **Run History** tab shows a table of every execution with status, start time, duration, and row count.
+  </Step>
+  <Step title="Inspect a specific run">
+    Click any run to open the detail view. You can see:
+
+    - Full input preview
+    - AI-generated output
+    - Any error messages or skipped rows
+    - A link to download the results
+  </Step>
+  <Step title="Retry a failed run">
+    If a run fails due to a temporary issue, such as a timeout or data source being unavailable, click **Retry** to rerun it with the same inputs.
+  </Step>
+</Steps>
+
+<Tip>
+  Use the **Filter** dropdown in run history to show only failed runs, which makes it easier to spot patterns and fix root causes.
+</Tip>
+
+## Edit, pause, or delete an automation
+
+From the Automations list or detail page, you can:
+
+- Click **Edit** to change the schedule, linked task, or notification channel
+- Toggle **Enabled** off to pause the automation without deleting it
+- Click **Delete** to remove the automation permanently. This does not delete the project or task.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Connect more tools" icon="plug" href="/guides/integrations">
+    Add Slack, Google Drive, or Zapier to expand what your automations can do.
+  </Card>
+
+  <Card title="Manage your team" icon="users" href="/account/team">
+    Invite teammates so they can create and monitor automations alongside you.
+  </Card>
+</CardGroup>

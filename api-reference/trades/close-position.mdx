@@ -1,0 +1,115 @@
+---
+title: "Close a Position"
+sidebarTitle: "Close Position"
+description: "Manually close an open position partially or fully. Returns the resulting trade record with realized PnL."
+---
+
+Manually close an open position when you want to take profit or cut losses outside of the agent's automated rules. You can close the entire position or only a percentage of it.
+
+## Endpoint
+
+```http
+POST /v1/positions/{position_id}/close
+```
+
+## Path parameters
+
+<ParamField path="position_id" type="string" required>
+  Unique identifier of the open position to close.
+</ParamField>
+
+## Body parameters
+
+<ParamField body="percentage" default="100" type="integer">
+  Percentage of the position to close, from `1` to `100`. Defaults to `100` (full close).
+</ParamField>
+
+## Example request
+
+```bash
+curl -X POST "https://api.eluup.ai/v1/positions/pos_3xYz1WvQ5Mn/close" \
+  -H "Authorization: Bearer $ELUUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"percentage": 100}'
+```
+
+## Response
+
+Returns the resulting trade object with realized PnL and on-chain transaction information.
+
+<ResponseField name="id" type="string">
+  Unique trade identifier created from the close.
+</ResponseField>
+
+<ResponseField name="agent_id" type="string">
+  ID of the agent that managed the position.
+</ResponseField>
+
+<ResponseField name="token_address" type="string">
+  Token contract address.
+</ResponseField>
+
+<ResponseField name="token_symbol" type="string">
+  Token symbol.
+</ResponseField>
+
+<ResponseField name="chain_id" type="integer">
+  Chain ID.
+</ResponseField>
+
+<ResponseField name="direction" type="string">
+  `BUY` or `SELL` depending on how the position was originally entered.
+</ResponseField>
+
+<ResponseField name="entry_price_usd" type="float">
+  Entry price in USD.
+</ResponseField>
+
+<ResponseField name="exit_price_usd" type="float">
+  Exit price in USD.
+</ResponseField>
+
+<ResponseField name="pnl_usd" type="float">
+  Realized profit or loss in USD.
+</ResponseField>
+
+<ResponseField name="roi_pct" type="float">
+  Return on investment percentage.
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  `closed`.
+</ResponseField>
+
+<ResponseField name="exit_tx_hash" type="string">
+  On-chain transaction hash for the exit.
+</ResponseField>
+
+<ResponseField name="opened_at" type="integer">
+  Unix timestamp when the position was originally opened.
+</ResponseField>
+
+<ResponseField name="closed_at" type="integer">
+  Unix timestamp when the position was closed.
+</ResponseField>
+
+### Example response
+
+```json
+{
+  "id": "trade_4aBc5DeF6Gh",
+  "agent_id": "agent_2vL9xQpW",
+  "token_address": "0x4ed4E862860beD51a9570b96d89aF5E1B0Efefed",
+  "token_symbol": "DEGEN",
+  "chain_id": 8453,
+  "direction": "BUY",
+  "entry_price_usd": 0.00185,
+  "exit_price_usd": 0.00210,
+  "pnl_usd": 135.20,
+  "roi_pct": 13.51,
+  "status": "closed",
+  "exit_tx_hash": "0x9e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f",
+  "opened_at": 1715800000,
+  "closed_at": 1715900000
+}
+```

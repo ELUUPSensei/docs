@@ -1,0 +1,34 @@
+---
+title: "Supported Chains and DEX Integrations"
+sidebarTitle: "Chains"
+description: "ELUUP AI trades on Base today and is expanding to BNB Chain and Solana. Learn which DEXes are supported and how chain IDs and token addresses work."
+---
+
+ELUUP AI executes trades on-chain through integrated decentralized exchanges. Today the platform is live on Base, with BNB Chain and Solana support coming soon.
+
+## Chain overview
+
+| Chain | Chain ID | Status | DEXes | Native Token |
+| --- | --- | --- | --- | --- |
+| Base | 8453 | Live | Uniswap v3, Aerodrome | ETH |
+| BNB Chain | 56 | Coming soon | PancakeSwap | BNB |
+| Solana | N/A | Coming soon | Raydium, Jupiter | SOL |
+
+## Base (chain ID 8453)
+
+Base is the primary trading environment for ELUUP AI agents. It offers low fees, fast finality, and deep liquidity for altcoin pairs. Agents on Base access:
+
+- **Uniswap v3** for concentrated-liquidity swaps
+- **Aerodrome** for stable and volatile pair routing
+
+When you configure an agent for Base, you reference tokens by their EVM contract address (for example, `0x4200000000000000000000000000000000000042`). Chain ID `8453` must be included in API requests and agent configuration so trades route to the correct network.
+
+## BNB Chain (chain ID 56)
+
+BNB Chain support is under development. When live, agents will trade through PancakeSwap using the same signal-following behavior as on Base. Token addresses on BNB Chain are also EVM-format contract addresses. Chain ID `56` will be used in all API requests.
+
+## Solana
+
+Solana integration is planned. Solana uses mint addresses rather than EVM contract addresses, so token identifiers will be base58-encoded mint addresses (for example, `So11111111111111111111111111111111111111112`). DEX integrations will target Raydium and Jupiter for routing and liquidity.
+
+All chain identifiers, token formats, and DEX integrations are managed automatically by the agent once you select the target chain in configuration. You do not need to construct swap calldata manually.

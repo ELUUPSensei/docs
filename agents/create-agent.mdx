@@ -1,0 +1,174 @@
+---
+title: "Create and Deploy a Trading Agent"
+sidebarTitle: "Create Agent"
+description: "Step-by-step guide to deploying an ELUUP AI trading agent: connect a wallet, configure risk, create the agent, and start trading."
+---
+
+This guide walks you through creating and starting an ELUUP AI trading agent from scratch. You will connect a wallet, configure risk rules, create the agent, and then start it so it begins monitoring signals and trading on your behalf.
+
+## Prerequisites
+
+- An active ELUUP AI account and [API key](/authentication)
+- A funded wallet on a supported chain (currently Base with chain ID `8453`)
+- The wallet private key or connection method ready for signing
+
+<Steps>
+  <Step title="Connect a wallet">
+    Before creating an agent, you must register the wallet you want it to trade with. Call [POST /wallets](/api-reference/wallets/connect-wallet) with your wallet address, chain ID (`8453` for Base), and a label.
+
+    ```json
+    {
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "chain_id": 8453,
+      "label": "Base Mainnet Wallet"
+    }
+    ```
+
+    Save the returned `wallet_id`. You will need it in the next step.
+  </Step>
+  <Step title="Create the agent">
+    Call [POST /agents](/api-reference/agents/create-agent) with the agent name, connected wallet ID, chain ID, and a `risk` object that defines how the agent sizes positions and manages downside.
+
+    The `risk` object requires four fields:
+
+    - `position_size_pct` — fraction of available balance to allocate per trade
+    - `stop_loss_pct` — maximum loss before the position is closed
+    - `trailing_stop_pct` — distance below the highest price reached before exit
+    - `take_profit_pct` — profit target at which the position is closed
+
+    See [Configure an Agent](/agents/configure) for detailed ranges and defaults.
+  </Step>
+  <Step title="Start the agent">
+    Once the agent is created, call [POST /agents/](/api-reference/agents/start-agent){id}[/start](/api-reference/agents/start-agent) to transition it from `idle` to `active`. The agent will immediately begin monitoring signals for its configured chain.
+  </Step>
+  <Step title="Verify status">
+    Call [GET /agents/](/api-reference/agents/get-agent){id} to confirm the agent state is `active`. You can also check `last_signal_at` and `open_positions_count` to verify it is receiving data.
+  </Step>
+</Steps>
+
+## Example: Create an Agent
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://api.eluup.ai/v1/agents \
+  -H "Authorization: Bearer $ELUUP_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Base Alpha Agent",
+    "wallet_id": "wallet_2nQ9xLpR3vK8wYzA",
+    "chain_id": 8453,
+    "risk": {
+      "position_size_pct": 0.05,
+      "stop_loss_pct": 0.07,
+      "trailing_stop_pct": 0.04,
+      "take_profit_pct": 0.20
+    }
+  }'
+```
+
+```typescript TypeScript
+const response = await fetch("https://api.eluup.ai/v1/agents", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.ELUUP_API_KEY}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    name: "Base Alpha Agent",
+    wallet_id: "wallet_2nQ9xLpR3vK8wYzA",
+    chain_id: 8453,
+    risk: {
+      position_size_pct: 0.05,
+      stop_loss_pct: 0.07,
+      trailing_stop_pct: 0.04,
+      take_profit_pct: 0.20,
+    },
+  }),
+});
+
+const agent = await response.json();
+console.log(agent.id);
+```
+
+```python Python
+import os, requests
+
+agent = requests.post(
+    "https://api.eluup.ai/v1/agents",
+    headers={
+        "Authorization": f"Bearer {os.environ['ELUUP_API_KEY']}",
+        "Content-Type": "application/json",
+    },
+    json={
+        "name": "Base Alpha Agent",
+        "wallet_id": "wallet_2nQ9xLpR3vK8wYzA",
+        "chain_id": 8453,
+        "risk": {
+            "position_size_pct": 0.05,
+            "stop_loss_pct": 0.07,
+            "trailing_stop_pct": 0.04,
+            "take_profit_pct": 0.20,
+        },
+    },
+).json()
+
+print(agent["id"])
+```
+
+</CodeGroup>
+
+## Example Response
+
+```json
+{
+  "id": "agent_7xK3mNpQvL9wYzB2",
+  "name": "Base Alpha Agent",
+  "wallet_id": "wallet_2nQ9xLpR3vK8wYzA",
+  "chain_id": 8453,
+  "state": "idle",
+  "min_confidence": 0.70,
+  "max_positions": 3,
+  "risk": {
+    "position_size_pct": 0.05,
+    "stop_loss_pct": 0.07,
+    "trailing_stop_pct": 0.04,
+    "take_profit_pct": 0.20
+  },
+  "open_positions_count": 0,
+  "total_trades": 0,
+  "win_rate": 0.00,
+  "total_pnl_usd": 0.00,
+  "created_at": "2024-06-15T09:23:00Z",
+  "updated_at": "2024-06-15T09:23:00Z"
+}
+```
+
+## Start the Agent
+
+After creating the agent, send a start request:
+
+<CodeGroup>
+
+```bash curl
+curl -X POST https://api.eluup.ai/v1/agents/agent_7xK3mNpQvL9wYzB2/start \
+  -H "Authorization: Bearer $ELUUP_API_KEY"
+```
+
+```typescript TypeScript
+await fetch("https://api.eluup.ai/v1/agents/agent_7xK3mNpQvL9wYzB2/start", {
+  method: "POST",
+  headers: { Authorization: `Bearer ${process.env.ELUUP_API_KEY}` },
+});
+```
+
+```python Python
+requests.post(
+    "https://api.eluup.ai/v1/agents/agent_7xK3mNpQvL9wYzB2/start",
+    headers={"Authorization": f"Bearer {os.environ['ELUUP_API_KEY']}"},
+)
+```
+
+</CodeGroup>
+
+A successful start returns the agent object with `state` updated to `active`.

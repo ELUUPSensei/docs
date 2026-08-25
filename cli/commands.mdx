@@ -1,0 +1,71 @@
+---
+title: "ELUUP AI CLI Command Reference"
+sidebarTitle: "Commands"
+description: "Complete reference for every ELUUP AI CLI command: authentication, agents, signals, trades, and wallets with flags and example output."
+---
+
+This page lists every command in the ELUUP AI CLI, grouped by area. Each command includes available flags and a short description. Use these references to build scripts and terminal workflows around your trading operations.
+
+## Authentication
+
+| Command | Description |
+| --- | --- |
+| `eluup auth login` | Open a browser to authenticate the CLI with your ELUUP AI account. |
+| `eluup auth logout` | Remove stored credentials from the local machine. |
+| `eluup auth status` | Show the current authentication state and account email. |
+
+## Agents
+
+| Command | Flags | Description |
+| --- | --- | --- |
+| `eluup agent list` | (none) | List all trading agents in your account. |
+| `eluup agent create` | `--name`, `--wallet`, `--chain`, `--config-file` | Create a new trading agent. Pass a JSON config file for advanced options. |
+| `eluup agent start <id>` | (none) | Start a trading agent. |
+| `eluup agent stop <id>` | (none) | Stop a running trading agent. |
+| `eluup agent delete <id>` | (none) | Permanently delete a trading agent. |
+| `eluup agent logs <id>` | `--follow`, `--tail` | Stream or inspect agent logs. |
+
+## Signals
+
+| Command | Flags | Description |
+| --- | --- | --- |
+| `eluup signals` | `--chain`, `--limit`, `--type` | Fetch the latest buy and sell signals for a chain. |
+
+## Trades
+
+| Command | Flags | Description |
+| --- | --- | --- |
+| `eluup trades list` | `--agent`, `--limit`, `--status` | List trades filtered by agent, limit, or status. |
+| `eluup trades positions` | (none) | List all currently open positions. |
+
+## Wallets
+
+| Command | Flags | Description |
+| --- | --- | --- |
+| `eluup wallet list` | (none) | List connected wallets. |
+| `eluup wallet connect` | `--address`, `--chain`, `--label` | Connect a new wallet to your account. |
+
+## Example: List agents
+
+```bash Terminal
+eluup agent list
+```
+
+```text Output
+ID              NAME          CHAIN   STATUS   WIN RATE
+ag_9xK2mP4vQnR  Base Alpha    8453    ACTIVE   72.4%
+ag_3wL8jN5bYtS  BNB Scout     56      PAUSED   61.0%
+```
+
+## Example: Fetch signals
+
+```bash Terminal
+eluup signals --chain 8453 --limit 5
+```
+
+```text Output
+TYPE   PAIR              CONFIDENCE   TIMESTAMP
+BUY    WETH/USDC         0.89         2026-01-15T14:32:01Z
+SELL   BRETT/WETH        0.82         2026-01-15T14:28:44Z
+BUY    AERO/WETH         0.91         2026-01-15T14:25:12Z
+```

@@ -1,0 +1,43 @@
+---
+title: "ELUUP AI MCP Server for AI Agent Integration"
+sidebarTitle: "Overview"
+description: "Connect Claude, GPT, Cursor, and other AI agents to ELUUP AI through the Model Context Protocol to trade and fetch signals by natural language."
+---
+
+The ELUUP AI MCP (Model Context Protocol) server lets AI agents interact with your trading infrastructure natively. Instead of writing API calls, you describe what you want in natural language, and the agent invokes ELUUP tools on your behalf.
+
+MCP is an open protocol that connects AI agents to external services. The ELUUP MCP server exposes a set of trading tools so agents can read signals, create agents, monitor positions, and review trade history as if they were built into the model itself.
+
+## Who this is for
+
+This integration is designed for AI developers building trading bots, automated assistants, or copilots that need to operate on live DEX markets. If you are building with Claude, GPT, Cursor, or any MCP-compatible framework, you can control ELUUP AI without writing custom API wrappers.
+
+## Tools exposed by the ELUUP MCP server
+
+<CardGroup cols={2}>
+  <Card title="get_signals" icon="arrow-trend-up">
+    Retrieve the latest buy and sell signals for any supported chain with optional filters.
+  </Card>
+
+  <Card title="create_agent" icon="plus">
+    Create and configure a new trading agent with risk parameters and wallet bindings.
+  </Card>
+
+  <Card title="list_agents" icon="list">
+    List all active and paused trading agents in the connected account.
+  </Card>
+
+  <Card title="get_positions" icon="chart-pie">
+    Fetch open positions and their current performance metrics.
+  </Card>
+
+  <Card title="get_trade_history" icon="clock-rotate-left">
+    Retrieve historical trades for a specific agent or time range.
+  </Card>
+</CardGroup>
+
+When an AI agent asks a trading question, the MCP server maps the request to the right tool, calls the ELUUP API, and returns a structured response the agent can format for you.
+
+## Next steps
+
+Follow the [MCP setup guide](/mcp/setup) to connect the server to your AI agent in a few configuration steps.
